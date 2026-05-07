@@ -1,0 +1,1470 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>WorkLife · Wireframe Blueprint</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper: #f3efe6;            /* warm vellum */
+    --paper-2: #ebe6da;
+    --ink: #1c2433;              /* deep navy ink */
+    --ink-2: #36405a;
+    --ink-3: #5a6480;
+    --line: #2a3349;
+    --line-soft: #6a7493;
+    --grid: rgba(28,36,51,0.10);
+    --grid-strong: rgba(28,36,51,0.18);
+    --accent: #b1361b;            /* red-pencil annotations */
+    --accent-2: #d4a017;          /* amber callout */
+    --note: #2a4d8f;              /* blue note */
+    --shadow: 0 1px 0 rgba(28,36,51,0.06);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Inter", -apple-system, system-ui, sans-serif;
+    font-size: 13px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    /* dual grid: minor 8px + major 80px */
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px),
+      linear-gradient(var(--grid-strong) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-strong) 1px, transparent 1px);
+    background-size: 8px 8px, 8px 8px, 80px 80px, 80px 80px;
+    background-position: -1px -1px, -1px -1px, -1px -1px, -1px -1px;
+  }
+  .mono{font-family:"JetBrains Mono", ui-monospace, Menlo, monospace}
+
+  /* Page (one per topic) */
+  .page{
+    max-width: 1320px;
+    margin: 32px auto;
+    background: var(--paper);
+    border: 1.5px solid var(--line);
+    box-shadow: 0 24px 60px -30px rgba(28,36,51,0.35);
+    page-break-after: always;
+    position: relative;
+    overflow: hidden;
+  }
+  .page:last-child{page-break-after:auto}
+
+  /* Title block (architectural-style cartouche) */
+  .title-block{
+    border-bottom: 1.5px solid var(--line);
+    display: grid;
+    grid-template-columns: 1fr 220px 160px 140px;
+    align-items: stretch;
+  }
+  .tb-cell{
+    padding: 10px 14px;
+    border-right: 1px solid var(--line);
+    display: flex; flex-direction: column; gap: 2px;
+    justify-content: center;
+  }
+  .tb-cell:last-child{border-right:0}
+  .tb-label{
+    font-family: "JetBrains Mono", monospace;
+    font-size: 9px; letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .tb-value{
+    font-family: "JetBrains Mono", monospace;
+    font-size: 14px; font-weight: 600;
+    color: var(--ink);
+  }
+  .tb-title h1{
+    margin: 0;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 22px; font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .tb-title .sub{
+    font-size: 12px; color: var(--ink-2);
+    margin-top: 2px;
+  }
+  .tb-title .num{
+    display: inline-block;
+    margin-right: 10px;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 2px 9px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 12px; font-weight: 700;
+    border-radius: 0;
+  }
+
+  /* Page body */
+  .page-body{
+    padding: 28px 36px 40px;
+  }
+
+  /* Section header */
+  .section{
+    margin-bottom: 32px;
+  }
+  .section-head{
+    display: flex; align-items: baseline; gap: 12px;
+    margin-bottom: 14px;
+    border-bottom: 1px dashed var(--line-soft);
+    padding-bottom: 6px;
+  }
+  .section-head .num{
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px; font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+  }
+  .section-head h2{
+    margin: 0;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 16px; font-weight: 700;
+    letter-spacing: -0.005em;
+  }
+  .section-head .desc{
+    margin-left: auto;
+    font-size: 11px; color: var(--ink-3);
+    max-width: 420px;
+    text-align: right;
+  }
+
+  /* ===== Wireframe primitives ===== */
+  .wf{
+    background: rgba(255,255,255,0.4);
+    border: 1.5px solid var(--line);
+    position: relative;
+    box-shadow: var(--shadow);
+  }
+  .wf-dashed{ border-style: dashed; }
+  .wf-thin{ border-width: 1px; }
+  .wf-fill{ background: rgba(28,36,51,0.06); }
+  .wf-fill-strong{ background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .wf-fill-soft{ background: rgba(28,36,51,0.03); }
+  .wf-hatch{
+    background-image:
+      repeating-linear-gradient(135deg, var(--ink) 0 1px, transparent 1px 6px);
+    background-color: rgba(28,36,51,0.04);
+  }
+  .wf-dotgrid{
+    background-image: radial-gradient(var(--line-soft) 1px, transparent 1px);
+    background-size: 10px 10px;
+  }
+
+  /* Placeholder X-box (image / icon stand-in) */
+  .ph-box{
+    border: 1.5px solid var(--line);
+    position: relative;
+    background: rgba(255,255,255,0.5);
+  }
+  .ph-box::before, .ph-box::after{
+    content: "";
+    position: absolute; inset: 0;
+    background: linear-gradient(to top right, transparent calc(50% - 1px), var(--line-soft) calc(50% - 0.5px), var(--line-soft) calc(50% + 0.5px), transparent calc(50% + 1px));
+  }
+  .ph-box::after{
+    background: linear-gradient(to top left, transparent calc(50% - 1px), var(--line-soft) calc(50% - 0.5px), var(--line-soft) calc(50% + 0.5px), transparent calc(50% + 1px));
+  }
+  .ph-circle{
+    border: 1.5px solid var(--line);
+    border-radius: 50%;
+    background: rgba(255,255,255,0.5);
+    position: relative;
+  }
+  .ph-circle::after{
+    content:""; position:absolute; inset:6px;
+    border-radius: 50%;
+    border: 1px dashed var(--line-soft);
+  }
+
+  /* Lines (text bars) */
+  .lines{ display: flex; flex-direction: column; gap: 5px; }
+  .ln{ height: 8px; background: var(--ink); opacity: 0.85; border-radius: 2px; }
+  .ln.short{ width: 35%; }
+  .ln.med{ width: 60%; }
+  .ln.long{ width: 80%; }
+  .ln.full{ width: 100%; }
+  .ln.faint{ opacity: 0.35; }
+  .ln.thin{ height: 4px; opacity: 0.4; }
+  .ln.thick{ height: 12px; opacity: 1; }
+
+  /* Labels & callouts */
+  .lbl{
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px;
+    color: var(--ink-2);
+    letter-spacing: 0.04em;
+  }
+  .lbl-tag{
+    display: inline-block;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 2px 7px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+  }
+  .annot{
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10.5px;
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .annot::before{ content: "↳ "; opacity: 0.7; }
+
+  /* Numbered marker (red circle) */
+  .marker{
+    display: inline-grid; place-items: center;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--paper);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .marker.amber{ background: var(--accent-2); color: var(--ink); }
+  .marker.note{ background: var(--note); }
+  .marker.ink{ background: var(--ink); }
+
+  /* Dimension line */
+  .dim{
+    position: relative;
+    color: var(--ink-3);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px;
+    letter-spacing: 0.04em;
+  }
+  .dim-h{
+    height: 14px;
+    margin-top: 6px;
+    border-top: 1px solid var(--line-soft);
+    text-align: center;
+    padding-top: 1px;
+  }
+  .dim-h::before, .dim-h::after{
+    content:""; position:absolute; top: 0;
+    width: 1px; height: 6px; background: var(--line-soft);
+  }
+  .dim-h::before{ left: 0; }
+  .dim-h::after{ right: 0; }
+
+  /* Side-by-side */
+  .row{ display: flex; gap: 24px; align-items: flex-start; }
+  .col{ flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 12px; }
+
+  /* Notes block (margin notes column) */
+  .notes-col{
+    width: 240px; flex-shrink: 0;
+    border-left: 1px dashed var(--line-soft);
+    padding-left: 18px;
+  }
+  .note-item{
+    margin-bottom: 14px;
+    display: flex; gap: 8px; align-items: flex-start;
+  }
+  .note-item .body{
+    font-size: 11.5px;
+    color: var(--ink-2);
+  }
+  .note-item .body b{
+    display: block;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 2px;
+    color: var(--ink);
+  }
+
+  /* App-shell wireframe (specific) */
+  .wf-shell{
+    height: 460px;
+    display: grid;
+    grid-template-columns: 200px 1fr 320px;
+    grid-template-rows: 60px 1fr;
+  }
+  .wf-shell > .header{ grid-column: 1 / -1; border-bottom: 1.5px solid var(--line); padding: 10px 14px; display: flex; align-items: center; gap: 12px; }
+  .wf-shell > .rail{ border-right: 1.5px solid var(--line); padding: 12px; display: flex; flex-direction: column; gap: 6px; }
+  .wf-shell > .main{ padding: 14px; }
+  .wf-shell > .insp{ border-left: 1.5px dashed var(--line); padding: 12px; background: rgba(28,36,51,0.04); }
+
+  /* Stack util */
+  .stack{ display: flex; flex-direction: column; gap: 8px; }
+  .stack-tight{ display: flex; flex-direction: column; gap: 4px; }
+
+  /* Specific component: chat bubble (wireframe) */
+  .wf-bubble{
+    border: 1.5px solid var(--line);
+    padding: 10px 12px;
+    background: rgba(255,255,255,0.5);
+    max-width: 70%;
+    position: relative;
+  }
+  .wf-bubble.user{ background: var(--ink); color: var(--paper); margin-left: auto; }
+  .wf-bubble.user .ln{ background: var(--paper); }
+  .wf-bubble.bot{ }
+
+  /* Topic legend strip */
+  .legend{
+    display: flex; flex-wrap: wrap; gap: 6px;
+    margin-top: 8px;
+  }
+  .legend-item{
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px;
+    color: var(--ink-2);
+    border: 1px solid var(--line);
+    padding: 3px 8px;
+  }
+  .legend-item .swatch{
+    width: 10px; height: 10px;
+    border: 1px solid var(--line);
+  }
+
+  /* Toc page */
+  .toc{
+    padding: 36px 48px 48px;
+  }
+  .toc h1{
+    font-family: "JetBrains Mono", monospace;
+    font-size: 32px;
+    margin: 0 0 4px;
+    letter-spacing: -0.01em;
+  }
+  .toc .kicker{
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+  }
+  .toc-list{
+    border-top: 1.5px solid var(--line);
+  }
+  .toc-row{
+    display: grid;
+    grid-template-columns: 60px 1fr auto;
+    gap: 16px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--line-soft);
+    align-items: baseline;
+  }
+  .toc-row .num{
+    font-family: "JetBrains Mono", monospace;
+    font-size: 14px; font-weight: 700;
+    color: var(--accent);
+  }
+  .toc-row .ttl{
+    font-family: "JetBrains Mono", monospace;
+    font-size: 16px; font-weight: 600;
+  }
+  .toc-row .ttl small{
+    display: block;
+    font-family: "Inter", sans-serif;
+    font-size: 12px; font-weight: 400;
+    color: var(--ink-3);
+    margin-top: 2px;
+  }
+  .toc-row .pg{
+    font-family: "JetBrains Mono", monospace;
+    font-size: 12px;
+    color: var(--ink-3);
+    letter-spacing: 0.1em;
+  }
+
+  /* Cover */
+  .cover{
+    height: 80vh;
+    min-height: 700px;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    padding: 0;
+  }
+  .cover .top{
+    border-bottom: 1.5px solid var(--line);
+    padding: 18px 36px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .cover .mid{
+    padding: 36px;
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 36px;
+    align-items: center;
+  }
+  .cover h1{
+    margin: 0;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 80px;
+    line-height: 0.92;
+    letter-spacing: -0.03em;
+    font-weight: 700;
+  }
+  .cover h1 small{
+    display: block;
+    font-size: 22px;
+    color: var(--accent);
+    margin-top: 12px;
+    letter-spacing: 0;
+  }
+  .cover .lede{
+    font-size: 14px;
+    color: var(--ink-2);
+    max-width: 500px;
+    margin-top: 24px;
+  }
+  .cover .stamp{
+    border: 1.5px solid var(--accent);
+    color: var(--accent);
+    padding: 10px 14px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transform: rotate(-3deg);
+    display: inline-block;
+    margin-top: 18px;
+  }
+  .cover .schematic{
+    border: 1.5px solid var(--line);
+    background: rgba(255,255,255,0.5);
+    aspect-ratio: 1;
+    padding: 24px;
+    display: grid; grid-template-rows: 50px 1fr 60px;
+    gap: 12px;
+    position: relative;
+  }
+  .cover .bottom{
+    border-top: 1.5px solid var(--line);
+    padding: 12px 36px;
+    display: flex; justify-content: space-between;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px;
+    color: var(--ink-3);
+    letter-spacing: 0.1em;
+  }
+
+  /* Architecture diagram */
+  .arch{
+    position: relative;
+    height: 480px;
+    background: rgba(255,255,255,0.4);
+    border: 1.5px solid var(--line);
+  }
+  .arch-svg{ position: absolute; inset: 0; width: 100%; height: 100%; }
+  .arch-node{
+    position: absolute;
+    background: var(--paper);
+    border: 1.5px solid var(--line);
+    padding: 8px 10px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    font-weight: 600;
+    text-align: center;
+    box-shadow: var(--shadow);
+    z-index: 2;
+  }
+  .arch-node.orch{ background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .arch-node small{ display: block; font-weight: 400; opacity: 0.7; font-size: 9px; margin-top: 2px; }
+
+  /* Routing flow */
+  .flow{
+    display: flex; align-items: center; gap: 12px;
+    padding: 18px;
+    border: 1.5px solid var(--line);
+    background: rgba(255,255,255,0.4);
+    overflow-x: auto;
+  }
+  .flow-step{
+    flex-shrink: 0;
+    min-width: 130px;
+    border: 1.5px solid var(--line);
+    background: var(--paper);
+    padding: 10px;
+    text-align: center;
+    position: relative;
+  }
+  .flow-step .step-num{
+    position: absolute; top: -10px; left: -10px;
+  }
+  .flow-step .ttl{
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px; font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .flow-step .desc{
+    font-size: 10px; color: var(--ink-3);
+  }
+  .flow-arrow{
+    flex-shrink: 0;
+    color: var(--accent);
+    font-size: 16px;
+    font-family: "JetBrains Mono", monospace;
+  }
+
+  /* Component spec table */
+  .spec-table{
+    width: 100%;
+    border-collapse: collapse;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+  }
+  .spec-table th, .spec-table td{
+    border: 1px solid var(--line);
+    padding: 7px 10px;
+    text-align: left;
+    vertical-align: top;
+  }
+  .spec-table th{
+    background: var(--ink);
+    color: var(--paper);
+    font-weight: 700;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .spec-table td:first-child{ font-weight: 600; color: var(--accent); }
+
+  /* Print */
+  @media print{
+    body{ background: #fff; }
+    .page{ margin: 0; box-shadow: none; border: none; page-break-after: always; }
+    .toolbar{ display: none; }
+  }
+
+  /* Floating toolbar */
+  .toolbar{
+    position: fixed; bottom: 16px; right: 16px;
+    background: var(--ink); color: var(--paper);
+    padding: 8px 12px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    border-radius: 999px;
+    z-index: 50;
+    display: flex; align-items: center; gap: 10px;
+    box-shadow: 0 12px 32px -12px rgba(28,36,51,0.5);
+  }
+  .toolbar a{ color: #ffd58a; text-decoration: none; }
+
+  .agent-grid-12{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+  }
+  .agent-tile{
+    border: 1.5px solid var(--line);
+    background: rgba(255,255,255,0.4);
+    padding: 12px;
+    display: flex; gap: 10px; align-items: flex-start;
+  }
+  .agent-tile .gly{
+    width: 32px; height: 32px;
+    border: 1.5px solid var(--line);
+    display: grid; place-items: center;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px; font-weight: 700;
+    flex-shrink: 0;
+    background: var(--paper);
+  }
+  .agent-tile .name{
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11.5px; font-weight: 700;
+    margin-bottom: 2px;
+  }
+  .agent-tile .role{ font-size: 10.5px; color: var(--ink-3); }
+  .agent-tile .triggers{
+    margin-top: 6px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 9.5px;
+    color: var(--ink-2);
+    letter-spacing: -0.01em;
+  }
+
+  /* Persona cards */
+  .persona-row{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+  .persona-card{
+    border: 1.5px solid var(--line);
+    background: rgba(255,255,255,0.4);
+    padding: 14px;
+  }
+  .persona-card h4{
+    margin: 0 0 4px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 13px; font-weight: 700;
+  }
+  .persona-card .role{
+    font-size: 11px; color: var(--ink-3);
+    margin-bottom: 10px;
+    border-bottom: 1px dashed var(--line-soft);
+    padding-bottom: 6px;
+  }
+  .persona-card .needs{
+    font-size: 11px; color: var(--ink-2);
+    margin-bottom: 8px;
+  }
+  .persona-card .needs b{
+    display: block;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-3);
+    margin-bottom: 2px;
+  }
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <span>BLUEPRINT · SHEET</span>
+  <span class="mono" id="sheet-counter">01 / 09</span>
+  <a href="javascript:window.print()">⎙ PRINT</a>
+</div>
+
+<!-- ==================== COVER ==================== -->
+<section class="page" id="p-cover">
+  <div class="title-block">
+    <div class="tb-cell tb-title">
+      <div><span class="num">WL</span><span class="mono" style="font-size:11px;color:var(--ink-3);letter-spacing:.16em">WORKLIFE / INTERNAL AGENT SYSTEM</span></div>
+    </div>
+    <div class="tb-cell">
+      <div class="tb-label">Drawing</div>
+      <div class="tb-value">WL-WF-000</div>
+    </div>
+    <div class="tb-cell">
+      <div class="tb-label">Revision</div>
+      <div class="tb-value">A · 2026.05</div>
+    </div>
+    <div class="tb-cell">
+      <div class="tb-label">Sheet</div>
+      <div class="tb-value">01 / 09</div>
+    </div>
+  </div>
+
+  <div class="cover">
+    <div class="top">
+      <div class="mono" style="font-size:11px;letter-spacing:.18em;color:var(--ink-3)">PROJECT</div>
+      <div class="mono" style="font-size:13px;font-weight:700">사내 잡무 처리 어시스턴트 — 다중 에이전트 오케스트레이션</div>
+      <div style="margin-left:auto" class="mono" style="font-size:11px;color:var(--ink-3)">CLASSIFIED · INTERNAL</div>
+    </div>
+
+    <div class="mid">
+      <div>
+        <div class="mono" style="font-size:11px;letter-spacing:.2em;color:var(--accent);text-transform:uppercase;margin-bottom:14px">Wireframe Blueprint</div>
+        <h1>WorkLife<small>사내 잡무 어시스턴트 — 설계 도면집</small></h1>
+        <p class="lede">A schematic record of every screen, component, and interaction in the WorkLife internal-agent prototype. Each sheet shows: the structural wireframe, marked-up callouts, and adjacent engineering notes for the implementation team.</p>
+        <div class="stamp">⌗ 09 sheets · 24 components</div>
+      </div>
+      <div class="schematic">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div class="lbl-tag">FIG. 0.0</div>
+          <div class="lbl">SYSTEM TOPOLOGY</div>
+        </div>
+        <div style="position:relative">
+          <!-- mini topology -->
+          <div style="position:absolute;left:50%;top:0;transform:translateX(-50%);border:1.5px solid var(--ink);background:var(--ink);color:var(--paper);padding:6px 10px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700">ORCHESTRATOR</div>
+          <svg viewBox="0 0 200 200" style="width:100%;height:100%;position:absolute;inset:0">
+            <g stroke="#1c2433" stroke-width="1" fill="none">
+              <line x1="100" y1="30" x2="30" y2="120"/>
+              <line x1="100" y1="30" x2="65" y2="140"/>
+              <line x1="100" y1="30" x2="100" y2="150"/>
+              <line x1="100" y1="30" x2="135" y2="140"/>
+              <line x1="100" y1="30" x2="170" y2="120"/>
+              <line x1="100" y1="30" x2="50" y2="180" stroke-dasharray="2 3"/>
+              <line x1="100" y1="30" x2="150" y2="180" stroke-dasharray="2 3"/>
+            </g>
+          </svg>
+          <div style="position:absolute;left:8px;top:120px;border:1px solid var(--line);background:var(--paper);padding:3px 6px;font-family:'JetBrains Mono',monospace;font-size:9px">SHUTTLE</div>
+          <div style="position:absolute;left:34%;top:140px;border:1px solid var(--line);background:var(--paper);padding:3px 6px;font-family:'JetBrains Mono',monospace;font-size:9px">MEETING</div>
+          <div style="position:absolute;left:50%;top:155px;transform:translateX(-50%);border:1px solid var(--line);background:var(--paper);padding:3px 6px;font-family:'JetBrains Mono',monospace;font-size:9px">BENEFITS</div>
+          <div style="position:absolute;right:30%;top:140px;border:1px solid var(--line);background:var(--paper);padding:3px 6px;font-family:'JetBrains Mono',monospace;font-size:9px">IT</div>
+          <div style="position:absolute;right:6px;top:120px;border:1px solid var(--line);background:var(--paper);padding:3px 6px;font-family:'JetBrains Mono',monospace;font-size:9px">HR</div>
+          <div style="position:absolute;left:18%;bottom:0;border:1px dashed var(--line-soft);background:var(--paper);padding:3px 6px;font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--ink-3)">+ 7 MORE</div>
+          <div style="position:absolute;right:18%;bottom:0;border:1px dashed var(--line-soft);background:var(--paper);padding:3px 6px;font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--ink-3)">WIKI / GENERAL</div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:flex-end">
+          <div class="lbl">1 ORCHESTRATOR + 12 SUBAGENTS</div>
+          <div class="lbl mono">SCALE: NTS</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom">
+      <span>DRAWN BY · DESIGN-OPS</span>
+      <span>CHECKED · —</span>
+      <span>APPROVED · —</span>
+      <span>DATE · 2026.05.05</span>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== TOC ==================== -->
+<section class="page" id="p-toc">
+  <div class="title-block">
+    <div class="tb-cell tb-title">
+      <div><span class="num">02</span><span class="mono" style="font-size:11px;color:var(--ink-3);letter-spacing:.16em">DRAWING INDEX / 도면 색인</span></div>
+    </div>
+    <div class="tb-cell"><div class="tb-label">Drawing</div><div class="tb-value">WL-WF-001</div></div>
+    <div class="tb-cell"><div class="tb-label">Sheet</div><div class="tb-value">02 / 09</div></div>
+    <div class="tb-cell"><div class="tb-label">Scale</div><div class="tb-value">N.T.S.</div></div>
+  </div>
+  <div class="toc">
+    <h1>Index of sheets</h1>
+    <div class="kicker">사내 잡무 어시스턴트 · 도면 목록</div>
+
+    <div class="toc-list">
+      <div class="toc-row"><span class="num">01</span><span class="ttl">Cover<small>Project metadata · system topology overview</small></span><span class="pg">SHEET 01</span></div>
+      <div class="toc-row"><span class="num">02</span><span class="ttl">Drawing index<small>This sheet · navigation</small></span><span class="pg">SHEET 02</span></div>
+      <div class="toc-row"><span class="num">03</span><span class="ttl">System architecture<small>Orchestrator / 12 subagents / data sources / external IO</small></span><span class="pg">SHEET 03</span></div>
+      <div class="toc-row"><span class="num">04</span><span class="ttl">App shell<small>Header / left rail / workspace / right inspector</small></span><span class="pg">SHEET 04</span></div>
+      <div class="toc-row"><span class="num">05</span><span class="ttl">Chat assistant<small>Empty state · routing pulse · message · action card</small></span><span class="pg">SHEET 05</span></div>
+      <div class="toc-row"><span class="num">06</span><span class="ttl">Action card variants<small>Stepped wizard · room picker · shuttle live · benefits balance</small></span><span class="pg">SHEET 06</span></div>
+      <div class="toc-row"><span class="num">07</span><span class="ttl">Community board<small>Composer · post · swarm reply · wikify CTA</small></span><span class="pg">SHEET 07</span></div>
+      <div class="toc-row"><span class="num">08</span><span class="ttl">Wiki + review queue<small>Search · queue · entity / concept / comparison cards</small></span><span class="pg">SHEET 08</span></div>
+      <div class="toc-row"><span class="num">09</span><span class="ttl">Tasks history + inspector<small>Stat trio · task list · orchestrator log + roster</small></span><span class="pg">SHEET 09</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== ARCHITECTURE ==================== -->
+<section class="page" id="p-arch">
+  <div class="title-block">
+    <div class="tb-cell tb-title"><div><span class="num">03</span><span class="mono" style="font-size:11px;color:var(--ink-3);letter-spacing:.16em">SYSTEM ARCHITECTURE / 시스템 구성도</span></div></div>
+    <div class="tb-cell"><div class="tb-label">Drawing</div><div class="tb-value">WL-WF-002</div></div>
+    <div class="tb-cell"><div class="tb-label">Sheet</div><div class="tb-value">03 / 09</div></div>
+    <div class="tb-cell"><div class="tb-label">Scale</div><div class="tb-value">N.T.S.</div></div>
+  </div>
+  <div class="page-body">
+
+    <div class="section">
+      <div class="section-head">
+        <span class="num">3.1</span>
+        <h2>Orchestration topology</h2>
+        <span class="desc">User sees one assistant. Internally, an Orchestrator routes intent to one of 12 specialist subagents. Each subagent owns its own tools + wiki scope.</span>
+      </div>
+
+      <div class="arch">
+        <svg class="arch-svg" preserveAspectRatio="none">
+          <defs>
+            <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+              <path d="M0 0L10 5L0 10z" fill="#1c2433"/>
+            </marker>
+          </defs>
+          <!-- user → orchestrator -->
+          <line x1="100" y1="60" x2="280" y2="180" stroke="#1c2433" stroke-width="1.5" marker-end="url(#arrow)"/>
+          <!-- orchestrator → subagents -->
+          <line x1="380" y1="220" x2="540" y2="80" stroke="#1c2433" stroke-width="1.2" marker-end="url(#arrow)"/>
+          <line x1="380" y1="220" x2="640" y2="80" stroke="#1c2433" stroke-width="1.2" marker-end="url(#arrow)"/>
+          <line x1="380" y1="220" x2="740" y2="80" stroke="#1c2433" stroke-width="1.2" marker-end="url(#arrow)"/>
+          <line x1="380" y1="220" x2="840" y2="80" stroke="#1c2433" stroke-width="1.2" marker-end="url(#arrow)"/>
+          <line x1="380" y1="220" x2="540" y2="200" stroke="#1c2433" stroke-width="1.2" marker-end="url(#arrow)"/>
+          <line x1="380" y1="220" x2="640" y2="200" stroke="#1c2433" stroke-width="1.2" marker-end="url(#arrow)"/>
+          <line x1="380" y1="220" x2="740" y2="200" stroke="#1c2433" stroke-width="1.2" marker-end="url(#arrow)"/>
+          <line x1="380" y1="220" x2="840" y2="200" stroke="#1c2433" stroke-width="1.2" marker-end="url(#arrow)"/>
+          <line x1="380" y1="220" x2="540" y2="320" stroke="#1c2433" stroke-width="1.2" stroke-dasharray="3 3" marker-end="url(#arrow)"/>
+          <line x1="380" y1="220" x2="640" y2="320" stroke="#1c2433" stroke-width="1.2" stroke-dasharray="3 3" marker-end="url(#arrow)"/>
+          <line x1="380" y1="220" x2="740" y2="320" stroke="#1c2433" stroke-width="1.2" stroke-dasharray="3 3" marker-end="url(#arrow)"/>
+          <line x1="380" y1="220" x2="840" y2="320" stroke="#1c2433" stroke-width="1.2" stroke-dasharray="3 3" marker-end="url(#arrow)"/>
+          <!-- subagents → tools -->
+          <line x1="940" y1="220" x2="1080" y2="120" stroke="#b1361b" stroke-width="1.2" marker-end="url(#arrow)"/>
+          <line x1="940" y1="220" x2="1080" y2="220" stroke="#b1361b" stroke-width="1.2" marker-end="url(#arrow)"/>
+          <line x1="940" y1="220" x2="1080" y2="320" stroke="#b1361b" stroke-width="1.2" marker-end="url(#arrow)"/>
+        </svg>
+
+        <div class="arch-node" style="left: 20px; top: 30px; width: 140px;">EMPLOYEE<small>natural language ko/en</small></div>
+        <div class="arch-node orch" style="left: 280px; top: 200px; width: 200px;">ORCHESTRATOR<small>intent · slot · route · compose</small></div>
+
+        <div class="arch-node" style="left: 540px; top: 60px; width: 90px;">SHUTTLE</div>
+        <div class="arch-node" style="left: 640px; top: 60px; width: 90px;">MEETING</div>
+        <div class="arch-node" style="left: 740px; top: 60px; width: 90px;">BENEFITS</div>
+        <div class="arch-node" style="left: 840px; top: 60px; width: 90px;">IT</div>
+
+        <div class="arch-node" style="left: 540px; top: 180px; width: 90px;">TRAINING</div>
+        <div class="arch-node" style="left: 640px; top: 180px; width: 90px;">ID CARD</div>
+        <div class="arch-node" style="left: 740px; top: 180px; width: 90px;">HR</div>
+        <div class="arch-node" style="left: 840px; top: 180px; width: 90px;">MEALS</div>
+
+        <div class="arch-node" style="left: 540px; top: 300px; width: 90px;">EXPENSE</div>
+        <div class="arch-node" style="left: 640px; top: 300px; width: 90px;">WIKI</div>
+        <div class="arch-node" style="left: 740px; top: 300px; width: 90px;">GENERAL</div>
+        <div class="arch-node" style="left: 840px; top: 300px; width: 90px; border-style: dashed;">+ EXTEND</div>
+
+        <div class="arch-node" style="left: 1060px; top: 100px; width: 130px; background: rgba(177,54,27,0.08); border-color: var(--accent);">TOOLS<small>helpdesk / cal / iam</small></div>
+        <div class="arch-node" style="left: 1060px; top: 200px; width: 130px; background: rgba(177,54,27,0.08); border-color: var(--accent);">DATA<small>wiki / posts / sched</small></div>
+        <div class="arch-node" style="left: 1060px; top: 300px; width: 130px; background: rgba(177,54,27,0.08); border-color: var(--accent);">EXT IO<small>email / sso / pdf</small></div>
+
+        <div style="position:absolute; left: 20px; bottom: 12px;" class="lbl">FIG 3.1 — solid: routed call · dashed: fallback</div>
+      </div>
+
+      <div class="legend">
+        <span class="legend-item"><span class="swatch" style="background:var(--ink)"></span>Orchestrator</span>
+        <span class="legend-item"><span class="swatch" style="background:var(--paper);border:1px solid var(--line)"></span>Specialist subagent</span>
+        <span class="legend-item"><span class="swatch" style="background:rgba(177,54,27,0.08);border-color:var(--accent)"></span>External resource</span>
+        <span class="legend-item">— solid line = primary route</span>
+        <span class="legend-item">– – dashed = fallback / multi-agent</span>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head">
+        <span class="num">3.2</span>
+        <h2>Subagent registry · 12 specialists</h2>
+        <span class="desc">Each owns: trigger keywords, tool grants, wiki scope, action-card schema.</span>
+      </div>
+      <div class="agent-grid-12">
+        <div class="agent-tile"><div class="gly">SH</div><div><div class="name">SHUTTLE</div><div class="role">셔틀버스 시간표 · 노선</div><div class="triggers">trg: 셔틀 / 강남 / 통근</div></div></div>
+        <div class="agent-tile"><div class="gly">MR</div><div><div class="name">MEETING ROOM</div><div class="role">회의실 검색 / 예약</div><div class="triggers">trg: 회의실 / 예약 / 화상</div></div></div>
+        <div class="agent-tile"><div class="gly">BN</div><div><div class="name">BENEFITS</div><div class="role">복지포인트 · 복지몰</div><div class="triggers">trg: 복지 / 포인트 / 혜택</div></div></div>
+        <div class="agent-tile"><div class="gly">IT</div><div><div class="name">IT</div><div class="role">SVPN · 프린터 · 계정</div><div class="triggers">trg: vpn / svpn / 원격</div></div></div>
+        <div class="agent-tile"><div class="gly">TR</div><div><div class="name">TRAINING</div><div class="role">외부교육 · 세미나</div><div class="triggers">trg: 교육 / 세미나 / 신청</div></div></div>
+        <div class="agent-tile"><div class="gly">ID</div><div><div class="name">ID CARD</div><div class="role">사원증 발급 / 재발급</div><div class="triggers">trg: 사원증 / 분실 / 재발급</div></div></div>
+        <div class="agent-tile"><div class="gly">HR</div><div><div class="name">HR</div><div class="role">휴가 · 근태 · 인사규정</div><div class="triggers">trg: 휴가 / 근태 / 승인</div></div></div>
+        <div class="agent-tile"><div class="gly">ML</div><div><div class="name">MEALS</div><div class="role">식단표 · 외부식당</div><div class="triggers">trg: 식당 / 메뉴 / 식권</div></div></div>
+        <div class="agent-tile"><div class="gly">EX</div><div><div class="name">EXPENSE</div><div class="role">법인카드 · 정산</div><div class="triggers">trg: 카드 / 영수증 / 정산</div></div></div>
+        <div class="agent-tile"><div class="gly">WI</div><div><div class="name">WIKI</div><div class="role">사내 위키 · 매뉴얼</div><div class="triggers">trg: 위키 / 어떻게 / 매뉴얼</div></div></div>
+        <div class="agent-tile"><div class="gly">GN</div><div><div class="name">GENERAL</div><div class="role">분류 외 일반</div><div class="triggers">trg: fallback / unclassified</div></div></div>
+        <div class="agent-tile" style="border-style:dashed; opacity:0.7"><div class="gly" style="border-style:dashed">+</div><div><div class="name">EXTENSIBLE</div><div class="role">add new specialist via registry</div><div class="triggers">cf. /agents.js</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== APP SHELL ==================== -->
+<section class="page" id="p-shell">
+  <div class="title-block">
+    <div class="tb-cell tb-title"><div><span class="num">04</span><span class="mono" style="font-size:11px;color:var(--ink-3);letter-spacing:.16em">APP SHELL / 전체 레이아웃</span></div></div>
+    <div class="tb-cell"><div class="tb-label">Drawing</div><div class="tb-value">WL-WF-003</div></div>
+    <div class="tb-cell"><div class="tb-label">Sheet</div><div class="tb-value">04 / 09</div></div>
+    <div class="tb-cell"><div class="tb-label">Scale</div><div class="tb-value">1:1 @ 1320W</div></div>
+  </div>
+
+  <div class="page-body">
+    <div class="row">
+      <div class="col" style="flex: 2.4">
+        <div class="section-head">
+          <span class="num">4.1</span><h2>Three-pane shell</h2>
+          <span class="desc">Header (56) · rail (220) · workspace (fluid) · inspector (320, slide-in)</span>
+        </div>
+
+        <div class="wf wf-shell" style="position: relative">
+          <!-- HEADER -->
+          <div class="header">
+            <div class="ph-box" style="width: 28px; height: 28px"></div>
+            <div class="stack-tight">
+              <div class="ln short" style="width: 60px; height: 7px"></div>
+              <div class="ln thin" style="width: 80px"></div>
+            </div>
+            <div style="display:flex; gap:18px; padding-left:14px; border-left:1px solid var(--line-soft)">
+              <div class="stack-tight"><div class="ln" style="width:30px;height:12px"></div><div class="ln thin" style="width:36px"></div></div>
+              <div class="stack-tight"><div class="ln" style="width:30px;height:12px"></div><div class="ln thin" style="width:36px"></div></div>
+              <div class="stack-tight"><div class="ln" style="width:30px;height:12px"></div><div class="ln thin" style="width:36px"></div></div>
+            </div>
+            <div style="margin-left:auto; display:flex; gap:6px">
+              <div class="wf wf-thin wf-fill" style="width:90px;height:24px"></div>
+              <div class="wf wf-thin" style="width:50px;height:24px;border-radius:999px"></div>
+            </div>
+            <span class="marker" style="position:absolute;left:-9px;top:24px">1</span>
+          </div>
+
+          <!-- RAIL -->
+          <div class="rail">
+            <div class="lbl">PERSONA</div>
+            <div style="display:flex; gap:3px">
+              <div class="wf wf-thin" style="flex:1;height:22px"></div>
+              <div class="wf wf-thin wf-fill-strong" style="flex:1;height:22px"></div>
+              <div class="wf wf-thin" style="flex:1;height:22px"></div>
+            </div>
+            <div class="lbl" style="margin-top:8px">NAV</div>
+            <div class="wf wf-thin wf-fill-strong" style="height:30px;display:flex;align-items:center;padding:0 8px;gap:6px"><div class="ln thin" style="width:10px;background:var(--paper);opacity:1"></div><div class="ln" style="width:50px;background:var(--paper);opacity:1;height:6px"></div></div>
+            <div class="wf wf-thin" style="height:30px;display:flex;align-items:center;padding:0 8px;gap:6px"><div class="ln thin" style="width:10px"></div><div class="ln short" style="height:6px"></div></div>
+            <div class="wf wf-thin" style="height:30px;display:flex;align-items:center;padding:0 8px;gap:6px"><div class="ln thin" style="width:10px"></div><div class="ln short" style="height:6px"></div></div>
+            <div class="wf wf-thin" style="height:30px;display:flex;align-items:center;padding:0 8px;gap:6px"><div class="ln thin" style="width:10px"></div><div class="ln short" style="height:6px"></div></div>
+            <div class="lbl" style="margin-top:auto">SPECIALISTS · 8 of 12</div>
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:3px">
+              <div class="ph-circle" style="width:20px;height:20px"></div>
+              <div class="ph-circle" style="width:20px;height:20px"></div>
+              <div class="ph-circle" style="width:20px;height:20px"></div>
+              <div class="ph-circle" style="width:20px;height:20px"></div>
+              <div class="ph-circle" style="width:20px;height:20px"></div>
+              <div class="ph-circle" style="width:20px;height:20px"></div>
+              <div class="ph-circle" style="width:20px;height:20px"></div>
+              <div class="ph-circle" style="width:20px;height:20px"></div>
+            </div>
+            <span class="marker" style="position:absolute;left:-9px;top:120px">2</span>
+          </div>
+
+          <!-- MAIN -->
+          <div class="main">
+            <div class="stack">
+              <div class="lbl">CHAT WORKSPACE — see SHEET 05</div>
+              <div class="wf wf-thin wf-dotgrid" style="height:60px;display:flex;align-items:center;justify-content:center"><span class="lbl">▼ messages stream ▼</span></div>
+              <div class="wf-bubble bot"><div class="lines"><div class="ln long thin"></div><div class="ln med thin"></div></div></div>
+              <div class="wf-bubble user"><div class="lines"><div class="ln med thin"></div></div></div>
+              <div class="wf-bubble bot"><div class="lines"><div class="ln long thin"></div><div class="ln long thin"></div><div class="ln short thin"></div></div></div>
+              <div class="wf wf-thin" style="height:42px;display:flex;align-items:center;padding:0 12px;gap:8px;background:rgba(255,255,255,0.6)">
+                <div class="ln thin" style="flex:1"></div>
+                <div class="wf wf-thin wf-fill-strong" style="width:60px;height:26px"></div>
+              </div>
+            </div>
+            <span class="marker amber" style="position:absolute;left:50%;top:80px">3</span>
+          </div>
+
+          <!-- INSPECTOR -->
+          <div class="insp">
+            <div class="lbl-tag">ORCHESTRATOR</div>
+            <div class="lbl" style="margin-top:6px">internal routing</div>
+            <div style="height:8px"></div>
+            <div class="lbl">ROUTE</div>
+            <div class="wf wf-thin" style="height:24px;display:flex;align-items:center;gap:4px;padding:0 8px;margin-top:4px">
+              <div class="ph-circle" style="width:14px;height:14px"></div><div class="ln thin" style="width:30px"></div>
+              <div class="lbl">→</div>
+              <div class="ph-circle" style="width:14px;height:14px"></div><div class="ln thin" style="width:30px"></div>
+            </div>
+            <div style="height:8px"></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px">
+              <div class="wf wf-thin wf-fill-soft" style="padding:4px 6px"><div class="lbl" style="font-size:8px">CONF</div><div class="mono" style="font-size:11px;font-weight:700">94%</div></div>
+              <div class="wf wf-thin wf-fill-soft" style="padding:4px 6px"><div class="lbl" style="font-size:8px">LATENCY</div><div class="mono" style="font-size:11px;font-weight:700">487ms</div></div>
+            </div>
+            <div style="height:8px"></div>
+            <div class="lbl">LOG</div>
+            <div class="wf wf-thin wf-fill-strong" style="padding:6px;font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--paper);line-height:1.6">
+              <div>00ms intent.classify(...)</div>
+              <div>12ms route.score</div>
+              <div>38ms dispatch → it</div>
+              <div>268ms wiki.cite ← 2</div>
+              <div>487ms response.compose ✓</div>
+            </div>
+            <span class="marker" style="position:absolute;right:-9px;top:24px">4</span>
+          </div>
+        </div>
+
+        <div class="dim dim-h">1320 px · max workspace width</div>
+
+        <div class="legend">
+          <span class="legend-item">⬚ ph-box = avatar/icon slot</span>
+          <span class="legend-item">═══ = filled element (ink)</span>
+          <span class="legend-item">▭ wf-fill-strong = primary CTA</span>
+          <span class="legend-item">⌗ dot grid = scrollable region</span>
+        </div>
+      </div>
+
+      <aside class="notes-col">
+        <div class="lbl-tag">SHEET NOTES</div>
+        <div style="height:14px"></div>
+        <div class="note-item"><span class="marker">1</span><div class="body"><b>Header — h: 56</b>Brand · live stats trio · inspector toggle · KO/EN switch. Stats hide < 1100w.</div></div>
+        <div class="note-item"><span class="marker">2</span><div class="body"><b>Rail — w: 220</b>Persona segmented control on top, primary nav (4), specialists peek at bottom. Hidden < 900w.</div></div>
+        <div class="note-item"><span class="marker amber">3</span><div class="body"><b>Workspace — fluid</b>Tab-controlled: chat / community / wiki / tasks. Max content width 760 (chat) / 920 (panels).</div></div>
+        <div class="note-item"><span class="marker">4</span><div class="body"><b>Inspector — w: 320</b>Slide-in from right. Shows last orchestrator trace + log + 12-roster. Toggle from header or from any bot message route-pill.</div></div>
+        <div class="note-item"><span class="marker note">i</span><div class="body"><b>Behaviors</b>· KO/EN re-renders all strings in place<br>· Persona switches example prompts<br>· Inspector remembers last trace</div></div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== CHAT ==================== -->
+<section class="page" id="p-chat">
+  <div class="title-block">
+    <div class="tb-cell tb-title"><div><span class="num">05</span><span class="mono" style="font-size:11px;color:var(--ink-3);letter-spacing:.16em">CHAT ASSISTANT / 채팅 어시스턴트</span></div></div>
+    <div class="tb-cell"><div class="tb-label">Drawing</div><div class="tb-value">WL-WF-004</div></div>
+    <div class="tb-cell"><div class="tb-label">Sheet</div><div class="tb-value">05 / 09</div></div>
+    <div class="tb-cell"><div class="tb-label">Scale</div><div class="tb-value">1:1</div></div>
+  </div>
+
+  <div class="page-body">
+
+    <div class="section">
+      <div class="section-head"><span class="num">5.1</span><h2>States — empty · routing · response</h2><span class="desc">Three principal states of the chat workspace.</span></div>
+      <div class="row" style="gap:18px">
+        <!-- EMPTY -->
+        <div class="col">
+          <div class="lbl-tag">A · EMPTY</div>
+          <div class="wf" style="padding:18px;min-height:380px;background:rgba(255,255,255,0.4)">
+            <div class="lines" style="margin-bottom:14px"><div class="ln thick" style="width:55%"></div><div class="ln med thin"></div></div>
+            <div class="lbl">EXAMPLES · driven by persona</div>
+            <div class="stack" style="margin-top:6px">
+              <div class="wf wf-thin" style="padding:8px 10px"><div class="ln long thin"></div></div>
+              <div class="wf wf-thin" style="padding:8px 10px"><div class="ln med thin"></div></div>
+              <div class="wf wf-thin" style="padding:8px 10px"><div class="ln long thin"></div></div>
+            </div>
+            <div style="height:auto;flex:1"></div>
+            <div class="wf wf-thin" style="margin-top:14px;height:40px;display:flex;align-items:center;padding:0 12px;gap:8px"><div class="ln thin" style="flex:1"></div><div class="wf wf-thin wf-fill-strong" style="width:50px;height:24px"></div></div>
+          </div>
+          <div class="annot">First-load hero. Persona-driven prompts (3).</div>
+        </div>
+
+        <!-- ROUTING -->
+        <div class="col">
+          <div class="lbl-tag" style="background:var(--accent)">B · ROUTING</div>
+          <div class="wf" style="padding:18px;min-height:380px;background:rgba(255,255,255,0.4)">
+            <div class="wf-bubble user" style="margin-bottom:12px"><div class="lines"><div class="ln med thin"></div></div></div>
+            <div class="wf wf-thin wf-fill-soft" style="padding:10px;margin-bottom:8px;border-color:var(--accent)">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+                <div class="ph-circle" style="width:20px;height:20px"></div>
+                <span class="annot" style="margin:0">routing…</span>
+                <span class="lbl" style="margin-left:auto">●●●</span>
+              </div>
+              <div style="display:flex;gap:4px;flex-wrap:wrap">
+                <div class="wf wf-thin" style="padding:2px 8px;font-size:10px"><span class="lbl">WIKI</span></div>
+                <div class="wf wf-thin" style="padding:2px 8px;font-size:10px"><span class="lbl">GENERAL</span></div>
+                <div class="wf wf-thin wf-fill-strong" style="padding:2px 8px;font-size:10px;color:var(--paper)"><span style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700">IT ✓</span></div>
+              </div>
+            </div>
+            <div class="lbl" style="text-align:center;color:var(--ink-3)">…dwelling 200–500ms</div>
+          </div>
+          <div class="annot">Animated chip cascade. Final = winner pulse.</div>
+        </div>
+
+        <!-- RESPONSE -->
+        <div class="col">
+          <div class="lbl-tag" style="background:var(--note)">C · RESPONSE</div>
+          <div class="wf" style="padding:18px;min-height:380px;background:rgba(255,255,255,0.4)">
+            <div class="wf-bubble user" style="margin-bottom:12px"><div class="lines"><div class="ln med thin"></div></div></div>
+            <div style="display:flex;gap:8px;align-items:flex-start;margin-bottom:6px">
+              <div class="ph-circle" style="width:24px;height:24px;flex-shrink:0"></div>
+              <div style="flex:1">
+                <div style="display:flex;gap:6px;align-items:center;margin-bottom:4px">
+                  <span class="mono" style="font-size:10px;font-weight:700">WORKLIFE</span>
+                  <div class="wf wf-thin" style="padding:1px 6px;font-size:9px"><span class="lbl">handled · IT</span></div>
+                  <span class="lbl" style="margin-left:auto;font-size:9px">487ms</span>
+                </div>
+                <div class="wf-bubble bot" style="max-width:none"><div class="lines"><div class="ln long thin"></div><div class="ln long thin"></div><div class="ln med thin"></div><div class="ln short thin"></div></div></div>
+                <!-- mini action card -->
+                <div class="wf wf-thin" style="margin-top:8px;padding:8px;background:rgba(255,255,255,0.7)">
+                  <div class="lbl" style="margin-bottom:6px">ACTION CARD ↓</div>
+                  <div class="wf wf-thin" style="height:20px;margin-bottom:3px;display:flex;align-items:center;padding:0 6px;gap:6px"><div class="marker" style="width:14px;height:14px;font-size:8px">1</div><div class="ln thin" style="flex:1"></div><div class="lbl-tag" style="font-size:7px;padding:1px 4px">FORM</div></div>
+                  <div class="wf wf-thin" style="height:20px;margin-bottom:3px;display:flex;align-items:center;padding:0 6px;gap:6px"><div class="marker" style="width:14px;height:14px;font-size:8px">2</div><div class="ln thin" style="flex:1"></div></div>
+                  <div class="wf wf-thin" style="height:20px;margin-bottom:3px;display:flex;align-items:center;padding:0 6px;gap:6px"><div class="marker" style="width:14px;height:14px;font-size:8px">3</div><div class="ln thin" style="flex:1"></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="annot">Bot meta-row · clickable agent pill → opens inspector.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head"><span class="num">5.2</span><h2>Routing flow · 5 steps</h2><span class="desc">Internal sequence from utterance to composed response.</span></div>
+      <div class="flow">
+        <div class="flow-step"><div class="marker step-num">1</div><div class="ttl">UTTERANCE</div><div class="desc">User natural language ko/en</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><div class="marker step-num">2</div><div class="ttl">CLASSIFY</div><div class="desc">Intent + slot extraction</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><div class="marker step-num">3</div><div class="ttl">ROUTE</div><div class="desc">Score top-N candidates</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><div class="marker step-num">4</div><div class="ttl">EXECUTE</div><div class="desc">Subagent · tool call · wiki cite</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><div class="marker step-num">5</div><div class="ttl">COMPOSE</div><div class="desc">Bubble + action card + log</div></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head"><span class="num">5.3</span><h2>Component spec — message bubble</h2></div>
+      <table class="spec-table">
+        <thead><tr><th>Element</th><th>Role</th><th>Behavior</th><th>Visible in EN</th></tr></thead>
+        <tbody>
+          <tr><td>avatar</td><td>orchestrator mark (always)</td><td>3 styles via Tweaks: dot · icon · illustration</td><td>same</td></tr>
+          <tr><td>name</td><td>brand label "WorkLife"</td><td>—</td><td>same</td></tr>
+          <tr><td>route pill</td><td>"handled by · {agent}"</td><td>click → open inspector with this msg's trace</td><td>"handled by"</td></tr>
+          <tr><td>elapsed</td><td>orchestration latency</td><td>shown in ms; truncates &lt;100</td><td>same</td></tr>
+          <tr><td>bubble</td><td>response text · markdown bold</td><td>pre-wrap · keep-all (ko word break)</td><td>—</td></tr>
+          <tr><td>action card</td><td>contextual wizard / data card</td><td>4 variants — see SHEET 06</td><td>—</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== ACTION CARDS ==================== -->
+<section class="page" id="p-cards">
+  <div class="title-block">
+    <div class="tb-cell tb-title"><div><span class="num">06</span><span class="mono" style="font-size:11px;color:var(--ink-3);letter-spacing:.16em">ACTION CARDS / 액션 카드 변형</span></div></div>
+    <div class="tb-cell"><div class="tb-label">Drawing</div><div class="tb-value">WL-WF-005</div></div>
+    <div class="tb-cell"><div class="tb-label">Sheet</div><div class="tb-value">06 / 09</div></div>
+    <div class="tb-cell"><div class="tb-label">Scale</div><div class="tb-value">1:1</div></div>
+  </div>
+
+  <div class="page-body">
+    <div class="row" style="gap:18px;flex-wrap:wrap">
+      <!-- Variant A: stepped wizard -->
+      <div class="col" style="min-width:280px">
+        <div class="lbl-tag">VARIANT A · STEPPED WIZARD</div>
+        <div class="wf" style="padding:14px;background:rgba(255,255,255,0.5)">
+          <div class="lbl">SVPN APPLICATION</div>
+          <div class="ln" style="width:50%;height:10px;margin:6px 0 12px"></div>
+          <div class="stack-tight">
+            <div class="wf wf-thin" style="padding:8px 10px;display:grid;grid-template-columns:24px 1fr auto auto;gap:8px;align-items:center"><div class="marker ink" style="background:var(--ink)">✓</div><div class="ln thin" style="width:80%"></div><div class="lbl-tag" style="font-size:8px">FORM</div><div class="wf wf-thin wf-fill-strong" style="width:34px;height:18px"></div></div>
+            <div class="wf wf-thin" style="padding:8px 10px;display:grid;grid-template-columns:24px 1fr auto auto;gap:8px;align-items:center"><div class="marker">2</div><div class="ln thin" style="width:70%"></div><div class="lbl-tag" style="font-size:8px">FORM</div><div class="wf wf-thin wf-fill-strong" style="width:34px;height:18px"></div></div>
+            <div class="wf wf-thin" style="padding:8px 10px;display:grid;grid-template-columns:24px 1fr auto auto;gap:8px;align-items:center"><div class="marker">3</div><div class="ln thin" style="width:60%"></div><div class="lbl-tag amber" style="font-size:8px;background:var(--accent-2)">APPRV</div><div class="wf wf-thin wf-fill-strong" style="width:34px;height:18px"></div></div>
+            <div class="wf wf-thin" style="padding:8px 10px;display:grid;grid-template-columns:24px 1fr auto auto;gap:8px;align-items:center"><div class="marker">4</div><div class="ln thin" style="width:50%"></div><div class="lbl-tag" style="font-size:8px">NOTIFY</div><div class="wf wf-thin wf-fill-strong" style="width:34px;height:18px"></div></div>
+          </div>
+        </div>
+        <div class="annot">Default. Click step → marks done, advances.</div>
+      </div>
+
+      <!-- Variant B: room picker -->
+      <div class="col" style="min-width:280px">
+        <div class="lbl-tag">VARIANT B · ROOM PICKER</div>
+        <div class="wf" style="padding:14px;background:rgba(255,255,255,0.5)">
+          <div class="lbl">ROOM OPTIONS · 3 found</div>
+          <div style="height:8px"></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px">
+            <div class="wf wf-thin" style="padding:8px"><div class="ln" style="width:80%;height:8px;margin-bottom:4px"></div><div class="ln thin" style="width:60%"></div><div class="ln thin" style="width:50%;margin-top:2px"></div><div class="wf wf-thin wf-fill-strong" style="margin-top:6px;height:18px"></div></div>
+            <div class="wf wf-thin" style="padding:8px"><div class="ln" style="width:80%;height:8px;margin-bottom:4px"></div><div class="ln thin" style="width:60%"></div><div class="ln thin" style="width:50%;margin-top:2px"></div><div class="wf wf-thin wf-fill-strong" style="margin-top:6px;height:18px"></div></div>
+            <div class="wf wf-thin" style="padding:8px"><div class="ln" style="width:80%;height:8px;margin-bottom:4px"></div><div class="ln thin" style="width:60%"></div><div class="ln thin" style="width:50%;margin-top:2px"></div><div class="wf wf-thin wf-fill-strong" style="margin-top:6px;height:18px"></div></div>
+          </div>
+        </div>
+        <div class="annot">capacity · vc-yes/no · walk dist · book CTA.</div>
+      </div>
+
+      <!-- Variant C: shuttle live -->
+      <div class="col" style="min-width:280px">
+        <div class="lbl-tag">VARIANT C · LIVE SHUTTLE</div>
+        <div class="wf" style="padding:14px;background:rgba(255,255,255,0.5)">
+          <div class="lbl">강남역 → 본사</div>
+          <div style="height:8px"></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px">
+            <div class="wf wf-thin" style="padding:8px;text-align:center;border-color:var(--accent);background:rgba(177,54,27,0.06);position:relative"><div style="position:absolute;top:-7px;right:6px" class="lbl-tag" style="font-size:8px">NEXT</div><div class="mono" style="font-size:18px;font-weight:700">08:25</div><div class="lbl" style="color:var(--accent)">● live · +2m</div></div>
+            <div class="wf wf-thin" style="padding:8px;text-align:center"><div class="mono" style="font-size:18px;font-weight:700">08:55</div><div class="lbl">scheduled</div></div>
+            <div class="wf wf-thin" style="padding:8px;text-align:center"><div class="mono" style="font-size:18px;font-weight:700">09:25</div><div class="lbl">scheduled</div></div>
+          </div>
+        </div>
+        <div class="annot">Live cell highlights. ETA · delay annotation.</div>
+      </div>
+
+      <!-- Variant D: benefits balance -->
+      <div class="col" style="min-width:280px">
+        <div class="lbl-tag">VARIANT D · BALANCE</div>
+        <div class="wf" style="padding:14px;background:rgba(255,255,255,0.5)">
+          <div class="lbl">WELFARE POINTS · 2026</div>
+          <div style="height:8px"></div>
+          <div class="wf wf-thin" style="padding:10px"><div class="mono" style="font-size:24px;font-weight:700">820,000<span style="font-size:14px;color:var(--ink-3);margin-left:4px">P</span></div><div class="wf wf-thin wf-fill" style="height:6px;margin:6px 0 4px"><div style="width:55%;height:100%;background:var(--ink)"></div></div><div class="lbl">used 680,000 / 1,500,000</div></div>
+          <div class="stack-tight" style="margin-top:8px">
+            <div class="wf wf-thin" style="padding:5px 8px;display:flex;justify-content:space-between"><span class="lbl">Health checkup</span><span class="mono" style="font-size:11px;font-weight:700">320,000P</span></div>
+            <div class="wf wf-thin" style="padding:5px 8px;display:flex;justify-content:space-between"><span class="lbl">Books</span><span class="mono" style="font-size:11px;font-weight:700">180,000P</span></div>
+            <div class="wf wf-thin" style="padding:5px 8px;display:flex;justify-content:space-between"><span class="lbl">Sports / fitness</span><span class="mono" style="font-size:11px;font-weight:700">120,000P</span></div>
+          </div>
+        </div>
+        <div class="annot">Hero numeric · progress · category breakdown.</div>
+      </div>
+    </div>
+
+    <div class="section" style="margin-top:32px">
+      <div class="section-head"><span class="num">6.5</span><h2>Schema</h2></div>
+      <table class="spec-table">
+        <thead><tr><th>Field</th><th>Type</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td>actionTitleKo / En</td><td>string</td><td>card title, language-bound</td></tr>
+          <tr><td>customCard</td><td>enum</td><td>"meetingRooms" | "shuttle" | "benefits" | (fallback: stepped)</td></tr>
+          <tr><td>steps[]</td><td>{ko, en, type}</td><td>type ∈ form / approval / submit / notify / physical</td></tr>
+          <tr><td>rooms[] / shuttle / benefits</td><td>variant payload</td><td>see /scenarios.js</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== COMMUNITY ==================== -->
+<section class="page" id="p-community">
+  <div class="title-block">
+    <div class="tb-cell tb-title"><div><span class="num">07</span><span class="mono" style="font-size:11px;color:var(--ink-3);letter-spacing:.16em">COMMUNITY BOARD / 사내 커뮤니티</span></div></div>
+    <div class="tb-cell"><div class="tb-label">Drawing</div><div class="tb-value">WL-WF-006</div></div>
+    <div class="tb-cell"><div class="tb-label">Sheet</div><div class="tb-value">07 / 09</div></div>
+    <div class="tb-cell"><div class="tb-label">Scale</div><div class="tb-value">1:1</div></div>
+  </div>
+  <div class="page-body">
+    <div class="row">
+      <div class="col" style="flex:2.4">
+        <div class="section-head"><span class="num">7.1</span><h2>Composer + post + swarm reply</h2><span class="desc">Employees post questions. Multiple agents auto-reply ("swarm"). Promoted answers become wiki pages.</span></div>
+
+        <div class="wf" style="padding:18px;background:rgba(255,255,255,0.4)">
+          <!-- Composer -->
+          <div class="lbl-tag">A · COMPOSER</div>
+          <div class="wf wf-thin" style="margin-top:6px;padding:12px;background:rgba(255,255,255,0.7)">
+            <div class="ln thick" style="width:60%"></div>
+            <div style="height:8px;border-bottom:1px solid var(--line-soft);margin-bottom:8px"></div>
+            <div class="lines"><div class="ln long thin"></div><div class="ln med thin"></div></div>
+            <div style="height:8px;border-top:1px dashed var(--line-soft);margin-top:8px;padding-top:8px;display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+              <div class="wf wf-thin" style="padding:2px 8px;font-size:9px"><span class="lbl">#shuttle</span></div>
+              <div class="wf wf-thin wf-fill-strong" style="padding:2px 8px;font-size:9px"><span class="mono" style="color:var(--paper);font-size:9px">#meeting</span></div>
+              <div class="wf wf-thin" style="padding:2px 8px;font-size:9px"><span class="lbl">#benefits</span></div>
+              <div class="wf wf-thin" style="padding:2px 8px;font-size:9px"><span class="lbl">#it</span></div>
+              <div style="margin-left:auto" class="wf wf-thin wf-fill-strong"><span style="padding:4px 10px;display:block;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--paper);font-weight:700">SUBMIT</span></div>
+            </div>
+            <span class="marker" style="position:absolute;left:-9px;top:24px">1</span>
+          </div>
+
+          <div style="height:18px"></div>
+
+          <!-- Post -->
+          <div class="lbl-tag">B · POST</div>
+          <div class="wf wf-thin" style="margin-top:6px;padding:14px;background:rgba(255,255,255,0.7);position:relative">
+            <div style="display:flex;justify-content:space-between;gap:12px">
+              <div style="flex:1">
+                <div class="ln thick" style="width:75%"></div>
+                <div style="display:flex;gap:6px;margin-top:6px"><div class="ln thin" style="width:60px"></div><div class="ln thin" style="width:8px"></div><div class="ln thin" style="width:50px"></div></div>
+              </div>
+              <div class="lbl-tag amber" style="background:var(--accent-2);color:var(--ink)">✓ WIKIFIED</div>
+            </div>
+            <div class="lines" style="margin-top:10px"><div class="ln long thin"></div><div class="ln long thin"></div></div>
+            <div style="display:flex;gap:5px;margin-top:8px"><div class="wf wf-thin" style="padding:2px 8px"><span class="lbl">#shuttle</span></div></div>
+            <span class="marker" style="position:absolute;left:-9px;top:24px">2</span>
+
+            <!-- Swarm replies -->
+            <div class="wf wf-thin wf-fill-soft" style="margin-top:12px;padding:10px">
+              <div style="display:flex;gap:6px;align-items:center"><span class="lbl">SWARM REPLIES</span><div class="lbl-tag" style="font-size:8px;padding:1px 5px">3</div></div>
+              <div style="height:8px"></div>
+              <div style="display:flex;gap:8px;align-items:flex-start;padding:6px 0;border-top:1px dashed var(--line-soft)"><div class="ph-circle" style="width:22px;height:22px;flex-shrink:0"></div><div style="flex:1"><div class="ln" style="width:30%;height:6px;background:var(--accent)"></div><div class="lines" style="margin-top:4px"><div class="ln long thin"></div><div class="ln short thin"></div></div></div></div>
+              <div style="display:flex;gap:8px;align-items:flex-start;padding:6px 0;border-top:1px dashed var(--line-soft)"><div class="ph-circle" style="width:22px;height:22px;flex-shrink:0"></div><div style="flex:1"><div class="ln" style="width:30%;height:6px;background:var(--note)"></div><div class="lines" style="margin-top:4px"><div class="ln long thin"></div><div class="ln med thin"></div></div></div></div>
+              <div style="display:flex;gap:8px;align-items:flex-start;padding:6px 0;border-top:1px dashed var(--line-soft)"><div class="ph-circle" style="width:22px;height:22px;flex-shrink:0"></div><div style="flex:1"><div class="ln" style="width:30%;height:6px;background:var(--ink-3)"></div><div class="lines" style="margin-top:4px"><div class="ln long thin"></div></div></div></div>
+              <span class="marker note" style="position:absolute;left:-9px;top:55%">3</span>
+            </div>
+
+            <div style="display:flex;gap:6px;margin-top:12px;padding-top:10px;border-top:1px dashed var(--line-soft)">
+              <div class="wf wf-thin" style="padding:4px 8px"><span class="lbl">📚 WIKIFY</span></div>
+              <div class="wf wf-thin" style="padding:4px 8px"><span class="lbl">↻ REBUILD SWARM</span></div>
+              <span class="marker amber" style="position:absolute;right:-9px;bottom:14px">4</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <aside class="notes-col">
+        <div class="lbl-tag">SHEET NOTES</div>
+        <div style="height:14px"></div>
+        <div class="note-item"><span class="marker">1</span><div class="body"><b>Composer</b>Title + body + multi-tag. Tag set determines which agents respond in the swarm.</div></div>
+        <div class="note-item"><span class="marker">2</span><div class="body"><b>Wikified badge</b>Posts promoted to wiki pages get this stamp. Once wikified, "wikify" CTA disabled.</div></div>
+        <div class="note-item"><span class="marker note">3</span><div class="body"><b>Swarm</b>2–4 agent replies, each colored by agent. Roll in 600ms after submit. Each reply links back to its source agent.</div></div>
+        <div class="note-item"><span class="marker amber">4</span><div class="body"><b>Promotion CTAs</b>· <b>Wikify</b> — sends post to review queue (sheet 08).<br>· <b>Rebuild swarm</b> — re-asks the agents (after policy update).</div></div>
+        <div class="note-item"><span class="marker note">i</span><div class="body"><b>Empty state</b>If no posts: hero illustration + 3 example tags to start.</div></div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== WIKI ==================== -->
+<section class="page" id="p-wiki">
+  <div class="title-block">
+    <div class="tb-cell tb-title"><div><span class="num">08</span><span class="mono" style="font-size:11px;color:var(--ink-3);letter-spacing:.16em">WIKI + REVIEW QUEUE / 사내 위키 + 리뷰</span></div></div>
+    <div class="tb-cell"><div class="tb-label">Drawing</div><div class="tb-value">WL-WF-007</div></div>
+    <div class="tb-cell"><div class="tb-label">Sheet</div><div class="tb-value">08 / 09</div></div>
+    <div class="tb-cell"><div class="tb-label">Scale</div><div class="tb-value">1:1</div></div>
+  </div>
+  <div class="page-body">
+
+    <div class="section">
+      <div class="section-head"><span class="num">8.1</span><h2>Search · review queue · entry kinds</h2><span class="desc">Self-organizing knowledge base. Wiki entries are typed: entity / concept / comparison.</span></div>
+
+      <div class="wf" style="padding:18px;background:rgba(255,255,255,0.4);position:relative">
+        <!-- search -->
+        <div class="wf wf-thin" style="height:36px;padding:0 14px;display:flex;align-items:center"><div class="ln thin" style="width:160px"></div></div>
+        <span class="marker" style="position:absolute;left:9px;top:32px;transform:translateY(-50%)">1</span>
+
+        <div style="height:18px"></div>
+
+        <!-- review queue -->
+        <div class="lbl-tag" style="background:var(--accent)">REVIEW QUEUE · 2 PENDING</div>
+        <div class="stack-tight" style="margin-top:6px">
+          <div class="wf wf-thin" style="padding:10px 12px;border-left:3px solid var(--accent);background:rgba(255,255,255,0.7);position:relative">
+            <div class="lbl-tag" style="background:var(--accent);font-size:8px">+ NEW</div>
+            <div class="ln" style="width:50%;height:9px;margin:6px 0 4px"></div>
+            <div class="lines"><div class="ln long thin"></div></div>
+            <div style="display:flex;gap:6px;margin-top:8px"><div class="wf wf-thin wf-fill-strong" style="padding:3px 9px"><span class="mono" style="color:var(--paper);font-size:9px;font-weight:700">APPROVE</span></div><div class="wf wf-thin" style="padding:3px 9px"><span class="lbl">REJECT</span></div></div>
+            <span class="marker amber" style="position:absolute;left:-9px;top:14px">2</span>
+          </div>
+          <div class="wf wf-thin" style="padding:10px 12px;border-left:3px solid var(--accent);background:rgba(255,255,255,0.7)">
+            <div class="lbl-tag" style="background:var(--accent);font-size:8px">↻ UPDATE</div>
+            <div class="ln" style="width:60%;height:9px;margin:6px 0 4px"></div>
+            <div class="lines"><div class="ln long thin"></div></div>
+            <div style="display:flex;gap:6px;margin-top:8px"><div class="wf wf-thin wf-fill-strong" style="padding:3px 9px"><span class="mono" style="color:var(--paper);font-size:9px;font-weight:700">APPROVE</span></div><div class="wf wf-thin" style="padding:3px 9px"><span class="lbl">REJECT</span></div></div>
+          </div>
+        </div>
+
+        <div style="height:24px"></div>
+
+        <!-- entries grouped by kind -->
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px">
+          <div>
+            <div class="lbl-tag">ENTITY · 6</div>
+            <div class="stack-tight" style="margin-top:6px">
+              <div class="wf wf-thin" style="padding:8px 10px;background:rgba(255,255,255,0.7)"><div class="lbl" style="font-size:8px">CAT · IT</div><div class="ln" style="width:80%;height:8px;margin:3px 0"></div><div class="lbl" style="font-size:9px">v7 · yesterday · 412 views</div></div>
+              <div class="wf wf-thin" style="padding:8px 10px;background:rgba(255,255,255,0.7)"><div class="lbl" style="font-size:8px">CAT · SHUTTLE</div><div class="ln" style="width:75%;height:8px;margin:3px 0"></div><div class="lbl" style="font-size:9px">v12 · 3d · 1284</div></div>
+              <div class="wf wf-thin" style="padding:8px 10px;background:rgba(255,255,255,0.7)"><div class="lbl" style="font-size:8px">CAT · BENEFITS</div><div class="ln" style="width:60%;height:8px;margin:3px 0"></div><div class="lbl" style="font-size:9px">v9 · 2w · 1567</div></div>
+            </div>
+          </div>
+          <div>
+            <div class="lbl-tag">CONCEPT · 2</div>
+            <div class="stack-tight" style="margin-top:6px">
+              <div class="wf wf-thin" style="padding:8px 10px;background:rgba(255,255,255,0.7)"><div class="lbl" style="font-size:8px">CAT · HR</div><div class="ln" style="width:65%;height:8px;margin:3px 0"></div><div class="lbl" style="font-size:9px">v3 · 1mo · 445</div></div>
+              <div class="wf wf-thin" style="padding:8px 10px;background:rgba(255,255,255,0.7)"><div class="lbl" style="font-size:8px">CAT · BENEFITS</div><div class="ln" style="width:75%;height:8px;margin:3px 0"></div><div class="lbl" style="font-size:9px">v6 · 3d · 921</div></div>
+            </div>
+          </div>
+          <div>
+            <div class="lbl-tag">COMPARISON · 1</div>
+            <div class="stack-tight" style="margin-top:6px">
+              <div class="wf wf-thin" style="padding:8px 10px;background:rgba(255,255,255,0.7)"><div class="lbl" style="font-size:8px">CAT · IT</div><div class="ln" style="width:80%;height:8px;margin:3px 0"></div><div class="lbl" style="font-size:9px">v2 · 2w · 312</div></div>
+            </div>
+          </div>
+          <span class="marker note" style="position:absolute;right:-9px;bottom:160px">3</span>
+        </div>
+      </div>
+
+      <div class="legend">
+        <span class="legend-item"><b>ENTITY</b> proper noun · process</span>
+        <span class="legend-item"><b>CONCEPT</b> rule · policy · why</span>
+        <span class="legend-item"><b>COMPARISON</b> A vs B</span>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head"><span class="num">8.2</span><h2>Promotion lifecycle</h2></div>
+      <div class="flow">
+        <div class="flow-step"><div class="marker step-num">1</div><div class="ttl">POST</div><div class="desc">Community question</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><div class="marker step-num">2</div><div class="ttl">SWARM</div><div class="desc">Agents reply</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><div class="marker step-num">3</div><div class="ttl">WIKIFY</div><div class="desc">Author / mod promotes</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><div class="marker step-num">4</div><div class="ttl">REVIEW</div><div class="desc">Knowledge agent ▣ approves</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><div class="marker step-num">5</div><div class="ttl">PUBLISH</div><div class="desc">Versioned page · cited next time</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== TASKS + INSPECTOR ==================== -->
+<section class="page" id="p-tasks">
+  <div class="title-block">
+    <div class="tb-cell tb-title"><div><span class="num">09</span><span class="mono" style="font-size:11px;color:var(--ink-3);letter-spacing:.16em">TASKS + ORCH INSPECTOR / 내 업무 + 라우팅 인스펙터</span></div></div>
+    <div class="tb-cell"><div class="tb-label">Drawing</div><div class="tb-value">WL-WF-008</div></div>
+    <div class="tb-cell"><div class="tb-label">Sheet</div><div class="tb-value">09 / 09</div></div>
+    <div class="tb-cell"><div class="tb-label">Scale</div><div class="tb-value">1:1</div></div>
+  </div>
+
+  <div class="page-body">
+
+    <div class="section">
+      <div class="section-head"><span class="num">9.1</span><h2>Tasks history</h2><span class="desc">Audit log of agent-completed work · time saved per item.</span></div>
+      <div class="wf" style="padding:18px;background:rgba(255,255,255,0.4)">
+        <!-- stat trio -->
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px">
+          <div class="wf wf-thin" style="padding:14px;background:rgba(255,255,255,0.7)"><div class="mono" style="font-size:24px;font-weight:700">68<span style="font-size:14px;color:var(--ink-3)">m</span></div><div class="lbl" style="margin-top:4px">MINUTES SAVED</div></div>
+          <div class="wf wf-thin" style="padding:14px;background:rgba(255,255,255,0.7)"><div class="mono" style="font-size:24px;font-weight:700">6</div><div class="lbl" style="margin-top:4px">REQUESTS TODAY</div></div>
+          <div class="wf wf-thin" style="padding:14px;background:rgba(255,255,255,0.7)"><div class="mono" style="font-size:24px;font-weight:700">5</div><div class="lbl" style="margin-top:4px">ACTIVE AGENTS</div></div>
+          <span class="marker" style="position:absolute;left:18px;top:34px;display:none"></span>
+        </div>
+        <!-- task rows -->
+        <div class="stack-tight">
+          <div class="wf wf-thin" style="padding:10px 12px;display:grid;grid-template-columns:32px 1fr auto auto;gap:10px;align-items:center"><div class="ph-circle" style="width:24px;height:24px"></div><div><div class="ln" style="width:60%;height:8px"></div><div class="ln thin" style="width:30%;margin-top:3px"></div></div><div class="mono" style="font-size:13px;font-weight:700">7m</div><div class="lbl-tag" style="background:#1c2433;font-size:8px">DONE</div></div>
+          <div class="wf wf-thin" style="padding:10px 12px;display:grid;grid-template-columns:32px 1fr auto auto;gap:10px;align-items:center"><div class="ph-circle" style="width:24px;height:24px"></div><div><div class="ln" style="width:55%;height:8px"></div><div class="ln thin" style="width:30%;margin-top:3px"></div></div><div class="mono" style="font-size:13px;font-weight:700">3m</div><div class="lbl-tag" style="background:#1c2433;font-size:8px">DONE</div></div>
+          <div class="wf wf-thin" style="padding:10px 12px;display:grid;grid-template-columns:32px 1fr auto auto;gap:10px;align-items:center;border-color:var(--accent-2);background:rgba(212,160,23,0.06)"><div class="ph-circle" style="width:24px;height:24px"></div><div><div class="ln" style="width:65%;height:8px"></div><div class="ln thin" style="width:30%;margin-top:3px"></div></div><div class="mono" style="font-size:13px;font-weight:700">18m</div><div class="lbl-tag amber" style="background:var(--accent-2);color:var(--ink);font-size:8px">PROGRESS</div></div>
+          <div class="wf wf-thin" style="padding:10px 12px;display:grid;grid-template-columns:32px 1fr auto auto;gap:10px;align-items:center"><div class="ph-circle" style="width:24px;height:24px"></div><div><div class="ln" style="width:50%;height:8px"></div><div class="ln thin" style="width:30%;margin-top:3px"></div></div><div class="mono" style="font-size:13px;font-weight:700">5m</div><div class="lbl-tag" style="background:#1c2433;font-size:8px">DONE</div></div>
+          <div class="wf wf-thin wf-dashed" style="padding:10px 12px;display:grid;grid-template-columns:32px 1fr auto auto;gap:10px;align-items:center;background:rgba(28,36,51,0.03)"><div class="ph-circle" style="width:24px;height:24px"></div><div><div class="ln" style="width:60%;height:8px;opacity:0.5"></div><div class="ln thin" style="width:30%;margin-top:3px"></div></div><div class="mono" style="font-size:13px;font-weight:700;color:var(--ink-3)">22m</div><div class="lbl-tag" style="background:var(--ink-3);font-size:8px">PENDING</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head"><span class="num">9.2</span><h2>Orchestrator inspector — full</h2><span class="desc">Right-side slide-in panel · always reflects last query.</span></div>
+      <div class="row">
+        <div class="col" style="flex:1.5">
+          <div class="wf" style="padding:18px;background:rgba(255,255,255,0.4);max-width:380px;position:relative">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start"><div><div class="lbl-tag" style="background:var(--note)">ORCHESTRATOR</div><div class="ln thick" style="width:140px;margin-top:6px"></div></div><div class="wf wf-thin" style="width:24px;height:24px;display:grid;place-items:center"><span class="lbl">✕</span></div></div>
+            <div class="ln thin" style="width:70%;margin-top:6px"></div>
+
+            <div style="height:14px"></div>
+            <div class="lbl">ROUTE</div>
+            <div class="wf wf-thin" style="margin-top:4px;padding:8px;display:flex;gap:4px;align-items:center;flex-wrap:wrap"><div class="ph-circle" style="width:18px;height:18px"></div><span class="lbl">→</span><div class="wf wf-thin" style="padding:2px 6px"><span class="lbl">WIKI</span></div><div class="wf wf-thin" style="padding:2px 6px"><span class="lbl">GENERAL</span></div><div class="wf wf-thin wf-fill-strong" style="padding:2px 6px"><span class="mono" style="color:var(--paper);font-size:9px;font-weight:700">IT ✓</span></div></div>
+
+            <div style="height:10px"></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px">
+              <div class="wf wf-thin wf-fill-soft" style="padding:6px 8px"><div class="lbl" style="font-size:8px">SUBAGENT</div><div class="mono" style="font-size:11px;font-weight:700;margin-top:2px">it</div></div>
+              <div class="wf wf-thin wf-fill-soft" style="padding:6px 8px"><div class="lbl" style="font-size:8px">CONFIDENCE</div><div class="mono" style="font-size:11px;font-weight:700;margin-top:2px">94%</div></div>
+              <div class="wf wf-thin wf-fill-soft" style="padding:6px 8px"><div class="lbl" style="font-size:8px">LATENCY</div><div class="mono" style="font-size:11px;font-weight:700;margin-top:2px">487ms</div></div>
+              <div class="wf wf-thin wf-fill-soft" style="padding:6px 8px"><div class="lbl" style="font-size:8px">SAVED</div><div class="mono" style="font-size:11px;font-weight:700;margin-top:2px">18m</div></div>
+            </div>
+
+            <div style="height:10px"></div>
+            <div class="lbl">TOOLS CALLED</div>
+            <div style="display:flex;gap:3px;flex-wrap:wrap;margin-top:4px"><div class="lbl-tag" style="font-size:8px">wiki.search</div><div class="lbl-tag" style="font-size:8px">helpdesk.openTicket</div><div class="lbl-tag" style="font-size:8px">form.prefill</div></div>
+
+            <div style="height:10px"></div>
+            <div class="lbl">LOG</div>
+            <div class="wf wf-fill-strong" style="margin-top:4px;padding:8px;font-family:'JetBrains Mono',monospace;font-size:9px;line-height:1.7">
+              <div><span style="color:#5eead4">00ms</span> intent.classify("svpn 신청...")</div>
+              <div><span style="color:#5eead4">12ms</span> route.score → 3 candidates</div>
+              <div><span style="color:#5eead4">38ms</span> dispatch → <b style="color:#fbbf24">it</b></div>
+              <div><span style="color:#5eead4">268ms</span> it.execute()</div>
+              <div><span style="color:#5eead4">414ms</span> wiki.cite ← 2 pages</div>
+              <div><span style="color:#5eead4">487ms</span> response.compose ✓</div>
+            </div>
+
+            <div style="height:14px;border-top:1px solid var(--line-soft);margin-top:14px;padding-top:14px"></div>
+            <div class="lbl">12 SPECIALIST AGENTS</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:3px;margin-top:4px">
+              <div class="lbl mono" style="display:flex;gap:4px;align-items:center"><div class="ph-circle" style="width:12px;height:12px"></div>SHUTTLE</div>
+              <div class="lbl mono" style="display:flex;gap:4px;align-items:center"><div class="ph-circle" style="width:12px;height:12px"></div>MEETING</div>
+              <div class="lbl mono" style="display:flex;gap:4px;align-items:center"><div class="ph-circle" style="width:12px;height:12px"></div>BENEFITS</div>
+              <div class="lbl mono" style="display:flex;gap:4px;align-items:center"><div class="ph-circle" style="width:12px;height:12px"></div>IT</div>
+              <div class="lbl mono" style="display:flex;gap:4px;align-items:center"><div class="ph-circle" style="width:12px;height:12px"></div>TRAINING</div>
+              <div class="lbl mono" style="display:flex;gap:4px;align-items:center"><div class="ph-circle" style="width:12px;height:12px"></div>ID CARD</div>
+              <div class="lbl mono" style="display:flex;gap:4px;align-items:center"><div class="ph-circle" style="width:12px;height:12px"></div>HR</div>
+              <div class="lbl mono" style="display:flex;gap:4px;align-items:center"><div class="ph-circle" style="width:12px;height:12px"></div>MEALS</div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="notes-col">
+          <div class="lbl-tag">PERSONAS</div>
+          <div style="height:14px"></div>
+          <div class="persona-row" style="grid-template-columns:1fr;gap:8px">
+            <div class="persona-card" style="padding:10px"><h4>NEW HIRE</h4><div class="role">3 mo tenure</div><div class="needs"><b>likely asks</b>"사원증을 분실했어요" · "셔틀 시간"</div></div>
+            <div class="persona-card" style="padding:10px"><h4>SENIOR · DEFAULT</h4><div class="role">5y</div><div class="needs"><b>likely asks</b>"회의실 예약" · "복지포인트"</div></div>
+            <div class="persona-card" style="padding:10px"><h4>MANAGER</h4><div class="role">team lead</div><div class="needs"><b>likely asks</b>"외부교육 승인" · "30명 회의실"</div></div>
+          </div>
+
+          <div style="height:18px"></div>
+          <div class="lbl-tag">END OF DRAWING SET</div>
+          <div style="margin-top:10px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--ink-3);line-height:1.6">9 sheets · 24 components<br>cf. WorkLife Agent.html</div>
+        </aside>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  // sheet counter on scroll
+  const counter = document.getElementById('sheet-counter');
+  const pages = document.querySelectorAll('.page');
+  function updateSheet(){
+    const mid = window.scrollY + window.innerHeight/2;
+    let n = 1;
+    pages.forEach((p, i) => {
+      const r = p.getBoundingClientRect();
+      const top = r.top + window.scrollY;
+      if (mid >= top) n = i + 1;
+    });
+    counter.textContent = String(n).padStart(2,'0') + ' / ' + String(pages.length).padStart(2,'0');
+  }
+  document.addEventListener('scroll', updateSheet, { passive: true });
+  updateSheet();
+</script>
+</body>
+</html>

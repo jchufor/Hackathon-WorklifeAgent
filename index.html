@@ -1,0 +1,348 @@
+﻿<!doctype html>
+<html lang="ko">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>WorkLife · 사내 잡무 어시스턴트</title>
+  <link rel="stylesheet" href="worklife.css">
+</head>
+
+<body>
+  <div id="root"></div>
+
+  <!-- Local copies — no network required -->
+  <script src="react.min.js"></script>
+  <script src="react-dom.min.js"></script>
+  <script src="babel.min.js"></script>
+
+  <script>
+    /* i18n */
+    window.I18N = { ko: { brand_name: "WorkLife", brand_tag: "사내 잡무 어시스턴트", nav_chat: "어시스턴트", nav_community: "커뮤니티", nav_wiki: "사내 위키", nav_tasks: "내 업무", nav_inspector: "오케스트레이터", header_subtitle: "임직원이 묻고, AI가 처리합니다", lang_toggle: "EN", persona_label: "페르소나", persona_new: "신입 (3개월차)", persona_vet: "경력 (5년차)", persona_mgr: "팀장 / 매니저", chat_greeting: "안녕하세요, WorkLife 입니다. 셔틀, 회의실, 복지, 사원증, IT — 무엇이든 물어보세요.", chat_placeholder: "예: SVPN 신청하고 싶어 · 강남에서 본사 가는 셔틀 몇 시야? · 복지포인트 잔액", send: "보내기", new_chat: "새 대화", examples_title: "이런 걸 물어보세요", routing: "라우팅 중", handled_by: "처리 담당", show_inspector: "오케스트레이터 보기", hide_inspector: "닫기", inspector_subtitle: "사용자에게는 하나의 어시스턴트지만, 내부에서는 12개의 전문 에이전트가 협업합니다.", inspector_route: "라우팅 경로", inspector_subagent: "전문 에이전트", inspector_tools: "사용된 도구", inspector_latency: "응답 시간", inspector_confidence: "신뢰도", action_title: "실행 카드", action_step: "단계", action_run: "이 단계 실행", action_done: "완료됨", action_open: "열기", action_book: "예약하기", action_apply: "신청하기", community_title: "커뮤니티 · ASK 보드", community_sub: "동료가 묻고, AI 에이전트가 다관점으로 답합니다", composer_title_ph: "질문 제목", composer_body_ph: "어떤 상황인지 1~3문장으로 적어주세요", submit_post: "등록", swarm_replies: "에이전트 답변", wikify: "위키화", wikified: "위키 등록됨", rebuild_swarm: "다시 분석", wiki_title: "사내 위키", wiki_sub: "임직원 질문이 위키가 됩니다", wiki_search_ph: "위키 검색…", wiki_review_queue: "검토 대기", wiki_pages: "페이지", wiki_audit: "감사 로그", wiki_kind_entity: "업무", wiki_kind_concept: "개념", wiki_kind_comparison: "비교", wiki_approve: "승인", wiki_reject: "거부", wiki_no_queue: "검토 대기 항목이 없습니다.", tasks_title: "내 업무", tasks_sub: "어시스턴트가 처리한 작업 기록", tasks_status_done: "완료", tasks_status_progress: "진행 중", tasks_status_pending: "대기", tasks_minutes_saved: "절약 시간", tasks_minutes_unit: "분", cat_shuttle: "셔틀버스", cat_meeting: "회의실", cat_benefits: "복지", cat_it: "IT 헬프데스크", cat_training: "외부교육", cat_idcard: "사원증", cat_hr: "인사 / 규정", cat_meals: "식당", cat_expense: "비용 정산", cat_wiki: "사내 지식", cat_general: "일반", cat_orchestrator: "오케스트레이터", minutes_saved_today: "오늘 절약된 시간", requests_today: "오늘 처리 건수", active_agents: "활성 에이전트", confidence: "신뢰도", cancel: "취소", save: "저장", close: "닫기", yes: "예", no: "아니오", open_chat: "어시스턴트 열기", quick_actions: "빠른 작업", minutes: "분", hours: "시간", now: "지금", demo_panel: "데모 시뮬레이션", demo_play: "시작", demo_stop: "중단", demo_step: "단계" }, en: { brand_name: "WorkLife", brand_tag: "Internal Operations Assistant", nav_chat: "Assistant", nav_community: "Community", nav_wiki: "Wiki", nav_tasks: "My Tasks", nav_inspector: "Orchestrator", header_subtitle: "Employees ask, AI gets it done", lang_toggle: "한", persona_label: "Persona", persona_new: "New hire (3 mo)", persona_vet: "Senior (5 yr)", persona_mgr: "Manager", chat_greeting: "Hi, I'm WorkLife. Shuttle, meeting rooms, benefits, ID cards, IT — ask me anything.", chat_placeholder: "e.g. Apply for SVPN · Shuttle from Gangnam · My welfare points balance", send: "Send", new_chat: "New chat", examples_title: "Try asking", routing: "Routing", handled_by: "Handled by", show_inspector: "Show orchestrator", hide_inspector: "Close", inspector_subtitle: "One assistant to you — 12 specialist agents collaborating behind the scenes.", inspector_route: "Route", inspector_subagent: "Specialist agent", inspector_tools: "Tools called", inspector_latency: "Latency", inspector_confidence: "Confidence", action_title: "Action card", action_step: "Step", action_run: "Run this step", action_done: "Done", action_open: "Open", action_book: "Book", action_apply: "Apply", community_title: "Community · ASK Board", community_sub: "Colleagues ask, AI agents reply from multiple angles", composer_title_ph: "Question title", composer_body_ph: "Describe your situation in 1–3 sentences", submit_post: "Post", swarm_replies: "Agent replies", wikify: "Wikify", wikified: "In wiki", rebuild_swarm: "Re-analyze", wiki_title: "Internal Wiki", wiki_sub: "Employee questions become wiki pages", wiki_search_ph: "Search wiki…", wiki_review_queue: "Review queue", wiki_pages: "Pages", wiki_audit: "Audit log", wiki_kind_entity: "Task", wiki_kind_concept: "Concept", wiki_kind_comparison: "Compare", wiki_approve: "Approve", wiki_reject: "Reject", wiki_no_queue: "No items waiting for review.", tasks_title: "My Tasks", tasks_sub: "Things the assistant handled for you", tasks_status_done: "Done", tasks_status_progress: "In progress", tasks_status_pending: "Pending", tasks_minutes_saved: "Time saved", tasks_minutes_unit: "min", cat_shuttle: "Shuttle", cat_meeting: "Meeting Room", cat_benefits: "Benefits", cat_it: "IT Helpdesk", cat_training: "Training", cat_idcard: "ID Card", cat_hr: "HR / Policy", cat_meals: "Cafeteria", cat_expense: "Expense", cat_wiki: "Knowledge", cat_general: "General", cat_orchestrator: "Orchestrator", minutes_saved_today: "Minutes saved today", requests_today: "Requests today", active_agents: "Active agents", confidence: "Confidence", cancel: "Cancel", save: "Save", close: "Close", yes: "Yes", no: "No", open_chat: "Open assistant", quick_actions: "Quick actions", minutes: "min", hours: "hr", now: "now", demo_panel: "Demo Scenarios", demo_play: "Play", demo_stop: "Stop", demo_step: "Step" } };
+    (function () { var d = function () { var s = localStorage.getItem("worklife.lang"); if (s === "ko" || s === "en") return s; return (navigator.language || "en").toLowerCase().startsWith("ko") ? "ko" : "en"; }; window.WL_LANG = d(); window.WL_setLang = function (l) { window.WL_LANG = l; localStorage.setItem("worklife.lang", l); document.documentElement.lang = l; window.dispatchEvent(new CustomEvent("wl-lang-change", { detail: l })); }; window.t = function (k) { var dict = window.I18N[window.WL_LANG] || window.I18N.en; return dict[k] || window.I18N.en[k] || k; }; document.documentElement.lang = window.WL_LANG; })();
+  </script>
+
+  <script>
+    /* agents */
+    window.AGENTS = [{ id: "orchestrator", nameKo: "오케스트레이터", nameEn: "Orchestrator", color: "#1f2937", glyph: "◆", role: "router" }, { id: "shuttle", nameKo: "셔틀 에이전트", nameEn: "Shuttle Agent", color: "#2563eb", glyph: "🚌", catKey: "cat_shuttle", role: "specialist" }, { id: "meeting", nameKo: "회의실 에이전트", nameEn: "Meeting Room Agent", color: "#0891b2", glyph: "📅", catKey: "cat_meeting", role: "specialist" }, { id: "benefits", nameKo: "복지 에이전트", nameEn: "Benefits Agent", color: "#7c3aed", glyph: "🎁", catKey: "cat_benefits", role: "specialist" }, { id: "it", nameKo: "IT 에이전트", nameEn: "IT Agent", color: "#dc2626", glyph: "💻", catKey: "cat_it", role: "specialist" }, { id: "training", nameKo: "교육 에이전트", nameEn: "Training Agent", color: "#ea580c", glyph: "🎓", catKey: "cat_training", role: "specialist" }, { id: "idcard", nameKo: "사원증 에이전트", nameEn: "ID Card Agent", color: "#059669", glyph: "🪪", catKey: "cat_idcard", role: "specialist" }, { id: "hr", nameKo: "인사 에이전트", nameEn: "HR Agent", color: "#be185d", glyph: "📋", catKey: "cat_hr", role: "specialist" }, { id: "meals", nameKo: "식당 에이전트", nameEn: "Cafeteria Agent", color: "#ca8a04", glyph: "🍱", catKey: "cat_meals", role: "specialist" }, { id: "expense", nameKo: "비용 에이전트", nameEn: "Expense Agent", color: "#0d9488", glyph: "💳", catKey: "cat_expense", role: "specialist" }, { id: "wiki", nameKo: "지식 에이전트", nameEn: "Knowledge Agent", color: "#475569", glyph: "📚", catKey: "cat_wiki", role: "specialist" }, { id: "general", nameKo: "일반 에이전트", nameEn: "General Agent", color: "#64748b", glyph: "💬", catKey: "cat_general", role: "specialist" }];
+    window.AGENT_BY_ID = Object.fromEntries(window.AGENTS.map(function (a) { return [a.id, a]; }));
+    window.agentName = function (a) { return window.WL_LANG === "ko" ? a.nameKo : a.nameEn; };
+  </script>
+
+  <script>
+    /* scenarios */
+    window.SCENARIOS = [{ id: "svpn", agent: "it", triggers: ["svpn", "vpn", "외부접속", "원격", "remote", "외부 접속"], confidence: 0.94, minutesSaved: 18, tools: ["wiki.search", "itHelpdesk.openTicket", "form.prefill"], answerKo: "SVPN(Standard VPN)은 사외에서 사내 시스템에 접근할 때 쓰는 사내 표준 VPN입니다. 일반 공중 VPN과 달리 IT에서 직접 운영합니다.\n\n신청 절차를 정리해뒀어요. 아래 카드에서 한 번에 진행할 수 있습니다.", answerEn: "SVPN (Standard VPN) is the company-operated VPN for accessing internal systems from outside. Unlike public VPNs, IT runs it directly.\n\nI prepared the application flow — you can run it from the card below.", actionTitleKo: "SVPN 신청", actionTitleEn: "SVPN application", steps: [{ ko: "사용 목적과 기간 입력", en: "Enter purpose and duration", type: "form" }, { ko: "장비 / IP 정보 확인", en: "Confirm device / IP info", type: "form" }, { ko: "팀장 승인 요청 발송", en: "Send to manager for approval", type: "approval" }, { ko: "접속 가이드 메일 수신", en: "Receive access guide via email", type: "notify" }], related: ["it", "wiki"] }, { id: "meeting", agent: "meeting", triggers: ["회의실", "예약", "화상회의", "meeting room", "book", "회의 잡"], confidence: 0.96, minutesSaved: 7, tools: ["calendar.findSlots", "meetingRoom.search", "meetingRoom.book"], answerKo: "내일(2026.04.30) 16:00–17:00, 6명 수용 가능한 회의실 3곳을 찾았습니다. 화상회의 장비 포함 여부를 표시했어요.", answerEn: "Found 3 rooms for tomorrow (Apr 30) 4–5pm, capacity 6, with video-conf availability marked.", actionTitleKo: "회의실 후보", actionTitleEn: "Room options", customCard: "meetingRooms", rooms: [{ name: "본관 7F · 한라", capacity: 8, vc: true, distance: "내 자리에서 도보 1분" }, { name: "본관 12F · 백두", capacity: 6, vc: true, distance: "엘리베이터 4분" }, { name: "별관 3F · 설악", capacity: 6, vc: false, distance: "도보 6분" }], roomsEn: [{ name: "Main 7F · Halla", capacity: 8, vc: true, distance: "1 min walk" }, { name: "Main 12F · Baekdu", capacity: 6, vc: true, distance: "4 min via elevator" }, { name: "Annex 3F · Seorak", capacity: 6, vc: false, distance: "6 min walk" }], related: ["meeting", "wiki"] }, { id: "benefits", agent: "benefits", triggers: ["복지", "복지포인트", "포인트", "혜택", "benefits", "welfare", "복지몰"], confidence: 0.92, minutesSaved: 12, tools: ["benefits.balance", "benefits.history", "wiki.lookup"], answerKo: "올해 잔여 복지포인트는 **820,000P** 입니다. 사용 만료는 2026년 12월 31일이에요. 지금까지 사용 내역과 추천 카테고리를 정리했습니다.", answerEn: "Your remaining welfare points this year: **820,000 P**. Expires Dec 31, 2026. Here's your usage so far + suggested categories.", actionTitleKo: "복지포인트 현황", actionTitleEn: "Welfare points overview", customCard: "benefits", benefits: { balance: 820000, total: 1500000, used: 680000, breakdown: [{ ko: "건강검진", en: "Health checkup", amount: 320000 }, { ko: "도서 구입", en: "Books", amount: 180000 }, { ko: "스포츠 / 헬스", en: "Sports / fitness", amount: 120000 }, { ko: "문화 / 영화", en: "Culture / movies", amount: 60000 }] }, related: ["benefits", "wiki"] }, { id: "shuttle", agent: "shuttle", triggers: ["셔틀", "버스", "shuttle", "강남", "역", "통근", "퇴근"], confidence: 0.95, minutesSaved: 5, tools: ["shuttle.schedule", "location.detect", "shuttle.live"], answerKo: "강남역 → 본사 셔틀 다음 출발은 **08:25** (5분 후)이에요. 이번 차는 7번 출구 앞이고, 현재 4호선 정체로 약 2분 지연 예상됩니다.", answerEn: "Next Gangnam → HQ shuttle: **08:25** (in 5 min). Pickup at Exit 7. ~2 min delay due to traffic.", actionTitleKo: "셔틀 시간표", actionTitleEn: "Shuttle schedule", customCard: "shuttle", shuttle: { route: "강남역 → 본사", routeEn: "Gangnam Stn → HQ", pickup: "강남역 7번 출구", pickupEn: "Gangnam Stn Exit 7", times: [{ time: "08:25", live: true, delay: 2 }, { time: "08:55", live: false, delay: 0 }, { time: "09:25", live: false, delay: 0 }] }, related: ["shuttle"] }, { id: "idcard", agent: "idcard", triggers: ["사원증", "출입증", "재발급", "분실", "id card", "badge"], confidence: 0.93, minutesSaved: 22, tools: ["hr.lookup", "idcard.requestReissue", "form.prefill"], answerKo: "분실 신고 + 재발급을 한 번에 진행할 수 있습니다. 분실 사유는 자동으로 '분실/도난'으로 잡았고, 임시 출입증은 1층 안내데스크에서 즉시 받을 수 있어요.", answerEn: "I'll handle the lost-card report and reissue together. Reason auto-set to 'lost/stolen'. You can pick up a temporary pass at the 1F front desk now.", actionTitleKo: "사원증 재발급", actionTitleEn: "ID card reissue", steps: [{ ko: "분실 신고서 자동 작성", en: "Auto-fill loss report", type: "form" }, { ko: "재발급 신청 제출", en: "Submit reissue request", type: "submit" }, { ko: "임시 출입증 1층 수령", en: "Pick up temporary pass at 1F", type: "physical" }, { ko: "신규 사원증 3일 내 도착", en: "New card arrives in 3 days", type: "notify" }], related: ["idcard", "hr"] }, { id: "pc_export", agent: "it", triggers: ["반출", "들고 나가", "들고나가", "노트북 반출", "pc 반출", "pc반출", "pc export", "노트북 가져"], confidence: 0.92, minutesSaved: 15, tools: ["wiki.search", "policy.lookup"], answerKo: "PC를 외부로 반출할 때는 **온라인 신청** 또는 **종이 서류** 두 가지 방법이 있어요.\n\n**온라인 신청**: Knox Portal 또는 NASCA 아이콘으로 신청 — 즉시 승인.\n**종이 서류**: 양식을 출력해 작성 후 보안실에 제출.\n\n두 방법 모두 퇴근 시 보안 게이트에서 사원증 태그 후 경비에게 노트북을 보여주면 기기 번호 확인 후 통과할 수 있어요.", answerEn: "There are two ways to carry your PC out of the office: **online application** or a **paper form**.\n\n**Online**: Apply via Knox Portal or the NASCA icon — approval is immediate.\n**Paper**: Print and fill out the form, then hand it to security.\n\nEither way, at the security gate on your way out: tap your ID card, then show the laptop to the guard — they'll verify the serial number against the registered application.", related: ["it", "wiki"] }, { id: "pc_export_online", agent: "it", triggers: ["온라인 신청", "knox portal", "nasca", "온라인으로", "온라인 방법", "온라인 신청은"], confidence: 0.91, minutesSaved: 0, tools: ["portal.navigate", "form.prefill"], answerKo: "온라인 신청은 두 가지 경로로 진행할 수 있어요 — 방법 A 또는 B 중 편한 걸로 하시면 되고, 이후 입력 단계는 동일합니다.\n\n신청 완료 시 즉시 승인되며, 퇴근 시 보안 게이트에서 사원증 태그 후 경비에게 노트북을 보여주시면 돼요.", answerEn: "Online application works via either path — Method A or B, your choice. The form fields after clicking 'PC 반출 신청' are identical either way.\n\nApproval is immediate on submission. On the way out, tap your ID at the security gate and show the laptop to the guard for serial number verification.", actionTitleKo: "PC 반출 온라인 신청", actionTitleEn: "PC carry-out — online application", steps: [{ ko: "[방법 A] Knox Portal → 퀵링크 → IT Helpdesk → 'PC 반출 신청' 클릭", en: "[Method A] Knox Portal → Quick Link → IT Helpdesk → click 'PC 반출 신청'", type: "form" }, { ko: "[방법 B] 또는: 작업표시줄 숨겨진 아이콘 ^ → NASCA 아이콘 우클릭 → 'PC 반출 신청' 선택", en: "[Method B] Or: taskbar hidden icons ^ → right-click NASCA icon → select 'PC 반출 신청'", type: "form" }, { ko: "사용 목적 입력 예시: '고객사 미팅'", en: "Purpose (example): 'Client meeting'", type: "form" }, { ko: "반출 기간 입력 예시: '1일 (당일 복귀)'", en: "Duration (example): '1 day (same-day return)'", type: "form" }, { ko: "기기 시리얼 번호: 노트북 하단 스티커에서 확인", en: "Serial number: check sticker on the bottom of the laptop", type: "form" }, { ko: "신청 완료 → 즉시 승인", en: "Submit → instant approval", type: "submit" }, { ko: "퇴근 시 보안 게이트: 사원증 태그 + 경비에게 노트북 제시 (시리얼 번호 확인)", en: "At security gate: tap ID card + show laptop to guard (serial number check)", type: "physical" }], related: ["it", "wiki"] }, { id: "pc_export_paper", agent: "it", triggers: ["종이 서류", "종이로", "서류로", "paper form", "수기 작성", "종이 신청"], confidence: 0.91, minutesSaved: 0, tools: ["form.download", "wiki.lookup"], answerKo: "종이 서류 방법도 간단해요. Knox Portal에서 양식을 다운로드해 출력하거나, 1층 안내데스크에서 직접 받을 수도 있어요.\n\n작성 내용은 온라인 신청과 동일합니다 (목적, 기간, 시리얼 번호). 퇴근 전 보안실에 제출하고 스탬프를 받은 후, 게이트에서 서류와 노트북을 함께 보여주시면 돼요.", answerEn: "The paper route is straightforward too. Download the form from Knox Portal or pick one up at the 1F front desk.\n\nFill in the same fields as the online form (purpose, duration, serial number). Submit to the security office before leaving — they'll stamp it. At the gate, show the stamped form along with the laptop.", actionTitleKo: "PC 반출 종이 서류", actionTitleEn: "PC carry-out — paper form", steps: [{ ko: "Knox Portal → IT Helpdesk → 양식 다운로드 클릭", en: "Knox Portal → IT Helpdesk → click form download", type: "form" }, { ko: "출력 후 수기 작성: 목적 / 반출 기간 / 시리얼 번호 (온라인과 동일 내용)", en: "Print and fill in: purpose / duration / serial number (same as online form)", type: "form" }, { ko: "퇴근 전 1층 보안실 담당자에게 서류 제출 → 스탬프 수령", en: "Before leaving: submit form to security officer at 1F → receive stamp", type: "physical" }, { ko: "보안 게이트: 스탬프 서류 + 노트북 제시 → 통과", en: "Security gate: show stamped form + laptop → cleared to exit", type: "physical" }], related: ["it", "wiki"] }];
+    window.matchScenario = function (text) { var lower = text.toLowerCase(), best = null, bestScore = 0; for (var i = 0; i < window.SCENARIOS.length; i++) { var sc = window.SCENARIOS[i], score = 0; for (var j = 0; j < sc.triggers.length; j++) { if (lower.includes(sc.triggers[j].toLowerCase())) score += sc.triggers[j].length; } if (score > bestScore) { bestScore = score; best = sc; } } return bestScore > 0 ? best : null; };
+  </script>
+
+  <script>
+    /* seed data */
+    window.SEED_POSTS = [{ id: "p1", titleKo: "재택 복지비 정산 기준이 바뀐 것 같아요?", titleEn: "Did the WFH reimbursement rules change?", bodyKo: "지난달부터 정산 체크리스트가 달라진 것 같습니다. 의자/모니터만 가능하다는 얘기와 인터넷도 가능하다는 얘기가 섞여 있어요. 공식 기준이 어떻게 되나요?", bodyEn: "The WFH reimbursement checklist seems to have changed last month. Some say chairs/monitors only, others say internet also counts. What's the official rule?", tags: ["benefits", "hr"], timeKo: "12분 전", timeEn: "12 min ago", author: "김민지 · 데이터팀", authorEn: "Minji K. · Data", wikified: false, comments: [{ agent: "expense", bodyKo: "회계처리는 사전 승인 품목만 가능합니다. 의자/모니터/책상은 기본 인정, 통신비는 별도 신청이 필요해요.", bodyEn: "Accounting only accepts pre-approved items. Chairs/monitors/desks are standard; comms fees need a separate request." }, { agent: "hr", bodyKo: "2026 개정안 기준 인터넷/통신비는 월 임금총액 또는 실제 증빙이 있어야 반영됩니다.", bodyEn: "Per the 2026 revision, internet/comms requires either monthly wage total or actual receipts." }, { agent: "wiki", bodyKo: "동일 질문이 이번 분기 4번째입니다. FAQ로 고정 추천드려요.", bodyEn: "This is the 4th time this quarter. Recommend pinning as a FAQ." }] }, { id: "p2", titleKo: "강동지점 출근인데 셔틀 운영하나요?", titleEn: "Is there a shuttle for the Gangdong office?", bodyKo: "다음 주부터 강동지점으로 출근합니다. 본사 ↔ 강동 셔틀이 있는지, 있다면 시간이 어떻게 되는지 알고 싶어요.", bodyEn: "Starting next week I'll commute to the Gangdong branch. Is there a HQ ↔ Gangdong shuttle, and what are the times?", tags: ["shuttle"], timeKo: "1시간 전", timeEn: "1h ago", author: "이준호 · 마케팅", authorEn: "Junho L. · Marketing", wikified: true, comments: [{ agent: "shuttle", bodyKo: "본사 ↔ 강동 셔틀은 평일 07:30 / 08:30 / 18:00 / 19:00 4회 운영됩니다.", bodyEn: "HQ ↔ Gangdong runs 4x weekdays: 07:30 / 08:30 / 18:00 / 19:00." }, { agent: "wiki", bodyKo: "위키 페이지 'shuttle/branch-routes' 에 시간표가 정리되어 있어요.", bodyEn: "Schedule is in wiki page 'shuttle/branch-routes'." }] }, { id: "p3", titleKo: "팀장 아닌 동료를 회의 승인자로 지정해도 되나요?", titleEn: "Can a colleague (non-manager) be set as approver?", bodyKo: "외부교육 신청 시 직속 팀장이 휴가 중인데 승인자를 다른 동료로 바꿔도 규정상 문제 없을까요?", bodyEn: "My direct manager is on leave when I need to apply for external training. Is it OK to set another colleague as approver?", tags: ["training", "hr"], timeKo: "3시간 전", timeEn: "3h ago", author: "박서연 · 디자인팀", authorEn: "Seoyeon P. · Design", wikified: false, comments: [{ agent: "hr", bodyKo: "원칙적으로 직속 리더의 위임이 있어야 합니다. 위임 메일 1건이면 충분해요.", bodyEn: "In principle, direct manager's delegation is required. A single delegation email suffices." }, { agent: "training", bodyKo: "교육포털에 '대리 승인자' 입력 필드가 있어요. 거기에 위임 메일 첨부하면 됩니다.", bodyEn: "The training portal has a 'proxy approver' field — attach the delegation email there." }] }];
+    window.SEED_WIKI = [{ id: "svpn", kind: "entity", titleKo: "SVPN 신청", titleEn: "SVPN application", catKey: "cat_it", version: 7, updatedKo: "어제", updatedEn: "Yesterday", views: 412 }, { id: "shuttle", kind: "entity", titleKo: "셔틀버스 시간표", titleEn: "Shuttle schedule", catKey: "cat_shuttle", version: 12, updatedKo: "3일 전", updatedEn: "3d ago", views: 1284 }, { id: "meeting", kind: "entity", titleKo: "회의실 예약", titleEn: "Meeting room booking", catKey: "cat_meeting", version: 5, updatedKo: "1주 전", updatedEn: "1w ago", views: 892 }, { id: "benefits", kind: "entity", titleKo: "복지포인트 사용 가이드", titleEn: "Welfare points guide", catKey: "cat_benefits", version: 9, updatedKo: "2주 전", updatedEn: "2w ago", views: 1567 }, { id: "idcard", kind: "entity", titleKo: "사원증 재발급", titleEn: "ID card reissue", catKey: "cat_idcard", version: 4, updatedKo: "1주 전", updatedEn: "1w ago", views: 234 }, { id: "training", kind: "entity", titleKo: "외부교육 신청", titleEn: "External training", catKey: "cat_training", version: 11, updatedKo: "5일 전", updatedEn: "5d ago", views: 678 }, { id: "approval", kind: "concept", titleKo: "승인자 선택 기준", titleEn: "How to pick approvers", catKey: "cat_hr", version: 3, updatedKo: "1개월 전", updatedEn: "1mo ago", views: 445 }, { id: "svpn-vpn", kind: "comparison", titleKo: "SVPN vs 일반 VPN", titleEn: "SVPN vs public VPN", catKey: "cat_it", version: 2, updatedKo: "2주 전", updatedEn: "2w ago", views: 312 }, { id: "wfh-reimburse", kind: "concept", titleKo: "재택 복지비 정산", titleEn: "WFH reimbursement", catKey: "cat_benefits", version: 6, updatedKo: "3일 전", updatedEn: "3d ago", views: 921 }];
+    window.SEED_QUEUE = [{ id: "q1", kind: "create", pageKo: "강동지점 셔틀 시간표", pageEn: "Gangdong branch shuttle schedule", reasonKo: "동일 질문 4건 누적 — 별도 페이지 생성 제안", reasonEn: "4 similar questions logged — proposing a dedicated page", sourceCount: 4, timeKo: "20분 전", timeEn: "20m ago" }, { id: "q2", kind: "update", pageKo: "재택 복지비 정산", pageEn: "WFH reimbursement", reasonKo: "2026 개정안 반영 — 통신비 신청 절차 추가", reasonEn: "Reflect 2026 revision — add comms-fee request flow", sourceCount: 2, timeKo: "1시간 전", timeEn: "1h ago" }];
+    window.SEED_TASKS = [{ id: "t1", agent: "meeting", titleKo: "회의실 예약 · 7F 한라", titleEn: "Booked Meeting Room · 7F Halla", status: "done", minutes: 7, timeKo: "방금", timeEn: "now" }, { id: "t2", agent: "shuttle", titleKo: "셔틀 시간 확인 · 강남역", titleEn: "Shuttle lookup · Gangnam Stn", status: "done", minutes: 3, timeKo: "10분 전", timeEn: "10m ago" }, { id: "t3", agent: "it", titleKo: "SVPN 신청 진행 중", titleEn: "SVPN application in progress", status: "progress", minutes: 18, timeKo: "30분 전", timeEn: "30m ago" }, { id: "t4", agent: "benefits", titleKo: "복지포인트 잔액 조회", titleEn: "Welfare points lookup", status: "done", minutes: 5, timeKo: "어제", timeEn: "Yesterday" }, { id: "t5", agent: "idcard", titleKo: "사원증 재발급 · 분실 신고", titleEn: "ID reissue · loss report", status: "pending", minutes: 22, timeKo: "어제", timeEn: "Yesterday" }, { id: "t6", agent: "training", titleKo: "외부교육 사전 검토", titleEn: "External training pre-check", status: "done", minutes: 15, timeKo: "2일 전", timeEn: "2d ago" }];
+  </script>
+
+  <script src="demo-simulations.js"></script>
+
+  <script type="text/babel">
+    /* ===== components ===== */
+    const { useState: useS, useEffect: useE, useMemo: useM, useRef: useR } = React;
+
+    /* useTweaks */
+    function useTweaks(defaults) { const [v, setV] = React.useState(defaults); const set = React.useCallback((k, val) => { const e = typeof k === 'object' ? k : { [k]: val }; setV(p => ({ ...p, ...e })); }, []); return [v, set]; }
+
+    /* AgentAvatar */
+    function AgentAvatar({ agent, style = "icon", size = 32 }) {
+      if (!agent) return null; const s = size;
+      if (style === "dot") return <span style={{ display: "inline-block", width: s * .42, height: s * .42, borderRadius: "50%", background: agent.color, boxShadow: `0 0 0 ${s * .12}px ${agent.color}22`, flexShrink: 0 }} />;
+      if (style === "illustration") return <span style={{ display: "inline-grid", placeItems: "center", width: s, height: s, flexShrink: 0, borderRadius: "50%", background: `radial-gradient(circle at 30% 25%,${agent.color}33,${agent.color}11 60%,transparent)`, border: `1.5px solid ${agent.color}66`, position: "relative" }}><span style={{ position: "absolute", inset: 3, borderRadius: "50%", background: `linear-gradient(140deg,#fff,${agent.color}18)`, border: `1px solid ${agent.color}33` }} /><span style={{ position: "relative", fontSize: s * .5 }}>{agent.glyph}</span></span>;
+      return <span style={{ display: "inline-grid", placeItems: "center", width: s, height: s, flexShrink: 0, borderRadius: s * .32, background: `${agent.color}14`, color: agent.color, fontSize: s * .5, border: `1px solid ${agent.color}28` }}>{agent.glyph}</span>;
+    }
+
+    /* ActionCard */
+    function ActionCard({ card, scenario }) {
+      const lang = window.WL_LANG;
+      const [done, setDone] = useS(new Set());
+      if (scenario?.customCard === "meetingRooms") {
+        const rooms = lang === "ko" ? scenario.rooms : scenario.roomsEn;
+        return <div className="action-card"><div className="action-head"><span className="action-kicker">{window.t("action_title")}</span><span className="action-title">{lang === "ko" ? scenario.actionTitleKo : scenario.actionTitleEn}</span></div><div className="room-grid">{rooms.map((r, i) => <div key={i} className="room-card"><div className="room-name">{r.name}</div><div className="room-meta"><span>{lang === "ko" ? `${r.capacity}명` : `${r.capacity} ppl`}</span><span className={r.vc ? "vc-yes" : "vc-no"}>{r.vc ? (lang === "ko" ? "화상회의 ✓" : "VC ✓") : (lang === "ko" ? "화상회의 ✗" : "VC ✗")}</span><span>{r.distance}</span></div><button className="btn-primary sm">{window.t("action_book")}</button></div>)}</div></div>;
+      }
+      if (scenario?.customCard === "shuttle") {
+        const sh = scenario.shuttle;
+        return <div className="action-card"><div className="action-head"><span className="action-kicker">{window.t("action_title")}</span><span className="action-title">{lang === "ko" ? scenario.actionTitleKo : scenario.actionTitleEn}</span></div><div className="shuttle-route">{lang === "ko" ? sh.route : sh.routeEn} · {lang === "ko" ? sh.pickup : sh.pickupEn}</div><div className="shuttle-times">{sh.times.map((t, i) => <div key={i} className={"shuttle-time" + (t.live ? " live" : "")}><div className="st-time">{t.time}</div>{t.live && <div className="st-live">● {lang === "ko" ? "실시간" : "live"}</div>}{t.delay > 0 && <div className="st-delay">+{t.delay}{lang === "ko" ? "분" : "m"}</div>}{i === 0 && <div className="st-label">{lang === "ko" ? "다음" : "Next"}</div>}</div>)}</div></div>;
+      }
+      if (scenario?.customCard === "benefits") {
+        const b = scenario.benefits, pct = (b.balance / b.total) * 100;
+        return <div className="action-card"><div className="action-head"><span className="action-kicker">{window.t("action_title")}</span><span className="action-title">{lang === "ko" ? scenario.actionTitleKo : scenario.actionTitleEn}</span></div><div className="benefits-balance"><div className="bb-num">{b.balance.toLocaleString()}<span>P</span></div><div className="bb-bar"><span style={{ width: `${pct}%` }} /></div><div className="bb-meta">{lang === "ko" ? `총 ${b.total.toLocaleString()}P 중 ${b.used.toLocaleString()}P 사용` : `Used ${b.used.toLocaleString()} of ${b.total.toLocaleString()} P`}</div></div><div className="benefits-breakdown">{b.breakdown.map((row, i) => <div key={i} className="bb-row"><span>{lang === "ko" ? row.ko : row.en}</span><span className="bb-amount">{row.amount.toLocaleString()}P</span></div>)}</div></div>;
+      }
+      const steps = scenario ? scenario.steps : (card?.steps || []);
+      return <div className="action-card"><div className="action-head"><span className="action-kicker">{window.t("action_title")}</span><span className="action-title">{scenario ? (lang === "ko" ? scenario.actionTitleKo : scenario.actionTitleEn) : card?.title}</span></div><ol className="action-steps">{steps.map((s, i) => { const label = lang === "ko" ? s.ko : s.en, isDone = done.has(i); return <li key={i} className={"action-step" + (isDone ? " done" : "")}><span className="step-num">{isDone ? "✓" : i + 1}</span><span className="step-label">{label}</span><span className="step-type">{s.type}</span><button className="step-btn" onClick={() => { const n = new Set(done); n.add(i); setDone(n); }}>{isDone ? window.t("action_done") : window.t("action_run")}</button></li>; })}</ol></div>;
+    }
+
+    /* ChatMessage */
+    function ChatMessage({ msg, avatarStyle, onShowInspector, onFollowUp }) {
+      const agent = window.AGENT_BY_ID[msg.agentId];
+      if (msg.role === "user") return <div className="msg-row user"><div className="msg-bubble user">{msg.text}{msg.typing && <span className="typing-cursor" />}</div></div>;
+      return <div className="msg-row bot"><AgentAvatar agent={window.AGENT_BY_ID.orchestrator} style={avatarStyle} size={36} /><div className="msg-content"><div className="msg-meta"><span className="msg-name">{window.t("brand_name")}</span>{msg.routedTo && agent && <button className="msg-route" onClick={() => onShowInspector && onShowInspector()}><span className="route-dot" style={{ background: agent.color }} />{window.t("handled_by")} · {window.agentName(agent)}</button>}{msg.elapsed && <span className="msg-time">{msg.elapsed}ms</span>}</div><div className="msg-bubble bot" dangerouslySetInnerHTML={{ __html: msg.html }} />{msg.actionCard && <ActionCard card={msg.actionCard} scenario={msg.scenario} />}{msg.followUps && onFollowUp && <div className="follow-ups">{msg.followUps.map((fu, i) => <button key={i} className="follow-up-btn" onClick={() => onFollowUp(fu.stepIndex)}>{window.WL_LANG === "ko" ? fu.textKo : fu.textEn}</button>)}</div>}</div></div>;
+    }
+
+    /* RoutingPulse */
+    function RoutingPulse({ candidates, finalAgent, avatarStyle }) {
+      return <div className="routing-pulse"><div className="routing-line"><AgentAvatar agent={window.AGENT_BY_ID.orchestrator} style={avatarStyle} size={28} /><span className="routing-label">{window.t("routing")}</span><span className="routing-dots"><span /><span /><span /></span></div><div className="routing-candidates">{candidates.map((id, i) => { const a = window.AGENT_BY_ID[id], isFinal = id === finalAgent; return <span key={id} className={"route-chip" + (isFinal ? " final" : "")} style={{ "--c": a.color, animationDelay: `${i * .12}s` }}><AgentAvatar agent={a} style="dot" size={14} />{window.agentName(a)}</span>; })}</div></div>;
+    }
+
+    /* CommunityBoard */
+    function CommunityBoard({ avatarStyle }) {
+      const lang = window.WL_LANG;
+      const [posts, setPosts] = useS(window.SEED_POSTS);
+      const [title, setTitle] = useS(""); const [body, setBody] = useS(""); const [tags, setTags] = useS(new Set());
+      const tagOpts = [{ id: "shuttle", label: window.t("cat_shuttle") }, { id: "meeting", label: window.t("cat_meeting") }, { id: "benefits", label: window.t("cat_benefits") }, { id: "it", label: window.t("cat_it") }, { id: "training", label: window.t("cat_training") }, { id: "idcard", label: window.t("cat_idcard") }, { id: "hr", label: window.t("cat_hr") }];
+      const submit = () => { if (!title.trim() || !body.trim()) return; const np = { id: "p" + Date.now(), titleKo: title, titleEn: title, bodyKo: body, bodyEn: body, tags: [...tags], timeKo: window.t("now"), timeEn: window.t("now"), author: lang === "ko" ? "나" : "You", authorEn: "You", wikified: false, comments: [] }; setPosts([np, ...posts]); setTitle(""); setBody(""); setTags(new Set()); setTimeout(() => { const nc = ["wiki", "hr", "general"].map(aid => ({ agent: aid, bodyKo: "분석 중입니다… 관련 위키 페이지를 참고해 답변드릴게요.", bodyEn: "Analyzing… I'll reference relevant wiki pages." })); setPosts(prev => prev.map(p => p.id === np.id ? { ...p, comments: nc } : p)); }, 800); };
+      const toggleTag = id => { const n = new Set(tags); n.has(id) ? n.delete(id) : n.add(id); setTags(n); };
+      const wikify = id => setPosts(posts.map(p => p.id === id ? { ...p, wikified: true } : p));
+      return <div className="panel-content community"><div className="composer"><input className="composer-title" placeholder={window.t("composer_title_ph")} value={title} onChange={e => setTitle(e.target.value)} /><textarea className="composer-body" placeholder={window.t("composer_body_ph")} value={body} onChange={e => setBody(e.target.value)} /><div className="composer-bottom"><div className="composer-tags">{tagOpts.map(t => <button key={t.id} className={"tag-chip" + (tags.has(t.id) ? " active" : "")} onClick={() => toggleTag(t.id)}>#{t.label}</button>)}</div><button className="btn-primary" onClick={submit}>{window.t("submit_post")}</button></div></div><div className="posts">{posts.map(p => <article key={p.id} className="post"><header className="post-head"><div><h3>{lang === "ko" ? p.titleKo : p.titleEn}</h3><div className="post-meta"><span>{lang === "ko" ? p.author : p.authorEn}</span><span>·</span><span>{lang === "ko" ? p.timeKo : p.timeEn}</span></div></div>{p.wikified && <span className="badge-wiki">✓ {window.t("wikified")}</span>}</header><p className="post-body">{lang === "ko" ? p.bodyKo : p.bodyEn}</p><div className="post-tags">{p.tags.map(tg => { const a = window.AGENT_BY_ID[tg]; return <span key={tg} className="post-tag">#{a ? window.agentName(a).replace(/ Agent| 에이전트/g, "") : tg}</span>; })}</div>{p.comments.length > 0 && <div className="swarm"><div className="swarm-head"><span>{window.t("swarm_replies")}</span><span className="swarm-count">{p.comments.length}</span></div>{p.comments.map((c, i) => { const a = window.AGENT_BY_ID[c.agent]; return <div key={i} className="swarm-reply"><AgentAvatar agent={a} style={avatarStyle} size={28} /><div className="swarm-body"><div className="swarm-name" style={{ color: a.color }}>{window.agentName(a)}</div><p>{lang === "ko" ? c.bodyKo : c.bodyEn}</p></div></div>; })}</div>}<div className="post-actions"><button className="btn-ghost sm" onClick={() => wikify(p.id)} disabled={p.wikified}>📚 {window.t("wikify")}</button><button className="btn-ghost sm">↻ {window.t("rebuild_swarm")}</button></div></article>)}</div></div>;
+    }
+
+    /* WikiPanel */
+    function WikiPanel() {
+      const lang = window.WL_LANG;
+      const [search, setSearch] = useS(""); const [queue, setQueue] = useS(window.SEED_QUEUE);
+      const filtered = window.SEED_WIKI.filter(p => { if (!search) return true; return (lang === "ko" ? p.titleKo : p.titleEn).toLowerCase().includes(search.toLowerCase()); });
+      const grouped = filtered.reduce((acc, p) => { (acc[p.kind] = acc[p.kind] || []).push(p); return acc; }, {});
+      const resolveQ = id => setQueue(queue.filter(q => q.id !== id));
+      return <div className="panel-content wiki"><input className="wiki-search" placeholder={window.t("wiki_search_ph")} value={search} onChange={e => setSearch(e.target.value)} /><section className="wiki-section"><h3 className="wiki-section-title">{window.t("wiki_review_queue")}<span className="wiki-count">{queue.length}</span></h3>{queue.length === 0 ? <div className="wiki-empty">{window.t("wiki_no_queue")}</div> : queue.map(q => <div key={q.id} className="queue-item"><div className="queue-kind">{q.kind === "create" ? "+ NEW" : "↻ UPDATE"}</div><div className="queue-page">{lang === "ko" ? q.pageKo : q.pageEn}</div><div className="queue-reason">{lang === "ko" ? q.reasonKo : q.reasonEn}</div><div className="queue-meta"><span>{q.sourceCount} {lang === "ko" ? "건의 질문" : "questions"}</span><span>·</span><span>{lang === "ko" ? q.timeKo : q.timeEn}</span></div><div className="queue-actions"><button className="btn-primary sm" onClick={() => resolveQ(q.id)}>{window.t("wiki_approve")}</button><button className="btn-ghost sm" onClick={() => resolveQ(q.id)}>{window.t("wiki_reject")}</button></div></div>)}</section>{["entity", "concept", "comparison"].map(kind => grouped[kind] && <section key={kind} className="wiki-section"><h3 className="wiki-section-title">{window.t("wiki_kind_" + kind)}<span className="wiki-count">{grouped[kind].length}</span></h3><div className="wiki-grid">{grouped[kind].map(p => <div key={p.id} className="wiki-card"><div className="wiki-card-cat">{window.t(p.catKey)}</div><div className="wiki-card-title">{lang === "ko" ? p.titleKo : p.titleEn}</div><div className="wiki-card-meta"><span>v{p.version}</span><span>·</span><span>{lang === "ko" ? p.updatedKo : p.updatedEn}</span><span>·</span><span>{p.views.toLocaleString()} {lang === "ko" ? "조회" : "views"}</span></div></div>)}</div></section>)}</div>;
+    }
+
+    /* TasksPanel */
+    function TasksPanel({ avatarStyle }) {
+      const lang = window.WL_LANG, tasks = window.SEED_TASKS;
+      const totalSaved = tasks.reduce((s, t) => s + (t.status === "done" ? t.minutes : 0), 0);
+      return <div className="panel-content tasks"><div className="tasks-stats"><div className="stat-card"><div className="stat-num">{totalSaved}<span>{window.t("minutes")}</span></div><div className="stat-label">{window.t("tasks_minutes_saved")}</div></div><div className="stat-card"><div className="stat-num">{tasks.length}</div><div className="stat-label">{window.t("requests_today")}</div></div><div className="stat-card"><div className="stat-num">{new Set(tasks.map(t => t.agent)).size}</div><div className="stat-label">{window.t("active_agents")}</div></div></div><div className="task-list">{tasks.map(t => { const a = window.AGENT_BY_ID[t.agent]; return <div key={t.id} className="task-item"><AgentAvatar agent={a} style={avatarStyle} size={32} /><div className="task-info"><div className="task-title">{lang === "ko" ? t.titleKo : t.titleEn}</div><div className="task-meta"><span style={{ color: a.color }}>{window.agentName(a)}</span><span>·</span><span>{lang === "ko" ? t.timeKo : t.timeEn}</span></div></div><div className="task-saved"><span>{t.minutes}{window.t("minutes")}</span><small>{window.t("tasks_minutes_saved")}</small></div><div className={"task-status status-" + t.status}>{window.t("tasks_status_" + t.status)}</div></div>; })}</div></div>;
+    }
+
+    /* OrchestratorInspector */
+    function OrchestratorInspector({ open, onClose, lastTrace, avatarStyle }) {
+      const lang = window.WL_LANG;
+      if (!open) return null;
+      return <aside className="inspector"><div className="inspector-head"><div><div className="inspector-kicker">{window.t("nav_inspector")}</div><h3>{lang === "ko" ? "내부 라우팅" : "Internal routing"}</h3></div><button className="btn-icon" onClick={onClose}>✕</button></div><p className="inspector-desc">{window.t("inspector_subtitle")}</p>{lastTrace ? <div><div className="trace-block"><div className="trace-label">{window.t("inspector_route")}</div><div className="trace-flow"><AgentAvatar agent={window.AGENT_BY_ID.orchestrator} style={avatarStyle} size={32} /><span className="trace-arrow">→</span>{lastTrace.candidates.map(id => { const a = window.AGENT_BY_ID[id], isFinal = id === lastTrace.finalAgent; return <span key={id} className={"trace-cand" + (isFinal ? " final" : "")} style={{ borderColor: a.color }}><AgentAvatar agent={a} style="dot" size={14} />{window.agentName(a)}{isFinal && <span className="trace-pick">✓</span>}</span>; })}</div></div><div className="trace-grid"><div className="trace-cell"><div className="trace-label">{window.t("inspector_subagent")}</div><div className="trace-val">{window.agentName(window.AGENT_BY_ID[lastTrace.finalAgent])}</div></div><div className="trace-cell"><div className="trace-label">{window.t("inspector_confidence")}</div><div className="trace-val">{Math.round(lastTrace.confidence * 100)}%</div></div><div className="trace-cell"><div className="trace-label">{window.t("inspector_latency")}</div><div className="trace-val">{lastTrace.elapsed}ms</div></div><div className="trace-cell"><div className="trace-label">{lang === "ko" ? "절약 시간" : "Time saved"}</div><div className="trace-val">{lastTrace.minutesSaved}{window.t("minutes")}</div></div></div><div className="trace-block"><div className="trace-label">{window.t("inspector_tools")}</div><div className="trace-tools">{lastTrace.tools.map(t => <code key={t} className="trace-tool">{t}</code>)}</div></div><div className="trace-block"><div className="trace-label">{lang === "ko" ? "오케스트레이터 로그" : "Orchestrator log"}</div><div className="trace-log"><div><span className="log-t">00ms</span> intent.classify("{lastTrace.query.slice(0, 40)}{lastTrace.query.length > 40 ? "…" : ""}")</div><div><span className="log-t">12ms</span> route.score → {lastTrace.candidates.length} candidates</div><div><span className="log-t">38ms</span> dispatch → <b>{lastTrace.finalAgent}</b></div><div><span className="log-t">{Math.round(lastTrace.elapsed * .55)}ms</span> {lastTrace.finalAgent}.execute()</div><div><span className="log-t">{Math.round(lastTrace.elapsed * .85)}ms</span> wiki.cite ← {Math.floor(Math.random() * 3) + 1} pages</div><div><span className="log-t">{lastTrace.elapsed}ms</span> response.compose ✓</div></div></div></div> : <div className="inspector-empty">{lang === "ko" ? "어시스턴트에 메시지를 보내면 라우팅 흐름이 여기 표시됩니다." : "Send a message and the routing trace appears here."}</div>}<div className="inspector-roster"><div className="trace-label">{lang === "ko" ? "전문 에이전트 12종" : "12 specialist agents"}</div><div className="roster-grid">{window.AGENTS.filter(a => a.role === "specialist").map(a => <div key={a.id} className="roster-item"><AgentAvatar agent={a} style={avatarStyle} size={26} /><span>{window.agentName(a)}</span></div>)}</div></div></aside>;
+    }
+
+    /* DemoPanel */
+    function DemoPanel({ open, onClose, onPlay, onStop, simId, simRunning, simStep, lang }) {
+      const sims = window.DEMO_SIMULATIONS || [];
+      return <div className={"demo-panel" + (open ? " open" : "")}>
+        <div className="demo-panel-head">
+          <span className="demo-panel-title">🎬 {window.t("demo_panel")}</span>
+          <button className="btn-icon" onClick={onClose}>✕</button>
+        </div>
+        <div className="demo-panel-body">
+          {sims.map(sim => {
+            const isActive = simId === sim.id, total = sim.steps.length;
+            return <div key={sim.id} className={"demo-sim-card" + (isActive ? " active" : "")}>
+              <div className="demo-sim-emoji">{sim.emoji}</div>
+              <div className="demo-sim-info">
+                <div className="demo-sim-title">{lang === "ko" ? sim.titleKo : sim.titleEn}</div>
+                <div className="demo-sim-desc">{lang === "ko" ? sim.descKo : sim.descEn}</div>
+                {isActive && simRunning && <div className="demo-progress">
+                  {sim.steps.map((_, i) => <span key={i} className={"demo-dot" + (i < simStep ? " done" : i === simStep ? " current" : "")} />)}
+                  <span className="demo-step-label">{window.t("demo_step")} {simStep}/{total}</span>
+                </div>}
+                {isActive && !simRunning && simStep >= total && <div className="demo-progress">
+                  <span className="demo-complete-label">✓ {total}/{total}</span>
+                </div>}
+              </div>
+              <div className="demo-sim-actions">
+                {isActive && simRunning
+                  ? <button className="btn-primary sm" onClick={onStop}>{window.t("demo_stop")}</button>
+                  : <button className="btn-primary sm" onClick={() => onPlay(sim)}>{window.t("demo_play")}</button>}
+              </div>
+            </div>;
+          })}
+        </div>
+      </div>;
+    }
+
+    /* App */
+    function App() {
+      const [lang, setLang] = useS(window.WL_LANG);
+      const [tweaks, setTweak] = useTweaks({ avatarStyle: "icon", persona: "vet" });
+      const [tab, setTab] = useS("chat");
+      const [messages, setMessages] = useS([]);
+      const [input, setInput] = useS("");
+      const [sending, setSending] = useS(false);
+      const [routing, setRouting] = useS(null);
+      const [inspectorOpen, setInspectorOpen] = useS(false);
+      const [lastTrace, setLastTrace] = useS(null);
+      const [demoOpen, setDemoOpen] = useS(true);
+      const [simRunning, setSimRunning] = useS(false);
+      const [simId, setSimId] = useS(null);
+      const [simStep, setSimStep] = useS(0);
+      const scrollRef = useR(null);
+      const simTimeoutsRef = useR([]);
+
+      useE(() => { const h = e => setLang(e.detail); window.addEventListener("wl-lang-change", h); return () => window.removeEventListener("wl-lang-change", h); }, []);
+      useE(() => { setMessages([{ id: "g0", role: "bot", html: window.t("chat_greeting") }]); }, [lang]);
+      useE(() => { if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight; }, [messages, routing]);
+
+      const personaPrompts = {
+        new: lang === "ko" ? ["사원증을 어제 분실했어요. 재발급 받고 싶어요", "강남역에서 본사 가는 셔틀 다음 시간 알려줘", "회사 식당 운영시간 알려줘"] : ["I lost my ID card yesterday. Need to reissue.", "Next shuttle from Gangnam Station to HQ?", "What are the cafeteria hours?"],
+        vet: lang === "ko" ? ["내일 오후 4시에 6명 회의실 예약해줘", "내 복지포인트 잔액 알려줘", "SVPN 신청하고 싶어"] : ["Book a 6-person meeting room tomorrow at 4pm", "What's my welfare points balance?", "I need to apply for SVPN"],
+        mgr: lang === "ko" ? ["팀원 외부교육 승인 절차 알려줘", "다음 주 전체 회의실 30명 예약 가능한 곳", "복지포인트 일괄 사용 가이드"] : ["External training approval process for my team", "Find a 30-person room next week", "Bulk welfare-point usage guide"],
+      };
+
+      const send = (textArg) => {
+        const text = (textArg ?? input).trim(); if (!text || sending) return;
+        setInput(""); setMessages(m => [...m, { id: "u" + Date.now(), role: "user", text }]); setSending(true);
+        const matched = window.matchScenario(text), finalAgent = matched ? matched.agent : "general";
+        const allSpec = window.AGENTS.filter(a => a.role === "specialist").map(a => a.id);
+        let cands = matched?.related ? [...matched.related] : ["wiki", "general"];
+        if (!cands.includes(finalAgent)) cands.unshift(finalAgent);
+        if (cands.length < 3) { const ex = allSpec.find(id => !cands.includes(id)); if (ex) cands.push(ex); }
+        cands = cands.slice(0, 3).filter(c => c !== finalAgent).concat([finalAgent]);
+        setRouting({ candidates: cands, finalAgent });
+        const elapsed = 480 + Math.floor(Math.random() * 220);
+        setTimeout(() => {
+          setRouting(null);
+          const trace = { query: text, candidates: cands, finalAgent, confidence: matched ? matched.confidence : 0.55, elapsed, minutesSaved: matched ? matched.minutesSaved : 3, tools: matched ? matched.tools : ["wiki.search"] };
+          setLastTrace(trace);
+          const raw = matched ? (window.WL_LANG === "ko" ? matched.answerKo : matched.answerEn) : (window.WL_LANG === "ko" ? "조금 더 자세히 알려주세요. 셔틀, 회의실, 복지, 사원증, IT 도움이 필요하신가요?" : "Could you say a bit more? Need help with shuttle, meeting rooms, benefits, ID card, or IT?");
+          const html = raw.replace(/\*\*(.+?)\*\*/g, "<b>$1</b>").replace(/\n/g, "<br>");
+          setMessages(m => [...m, { id: "b" + Date.now(), role: "bot", html, agentId: finalAgent, routedTo: finalAgent, elapsed, scenario: matched, actionCard: (matched && matched.steps && matched.steps.length) ? { title: matched.actionTitleKo, steps: matched.steps } : null }]);
+          setSending(false);
+        }, elapsed);
+      };
+
+      const stopSimulation = () => {
+        simTimeoutsRef.current.forEach(clearTimeout);
+        simTimeoutsRef.current = [];
+        setSimRunning(false); setSimId(null); setSimStep(0);
+        setRouting(null); setSending(false);
+        setMessages(m => m.map(msg => msg.followUps ? { ...msg, followUps: null } : msg));
+      };
+
+      const playSimStep = (sim, stepIndex) => {
+        const step = sim.steps[stepIndex];
+        const allSpec = window.AGENTS.filter(a => a.role === "specialist").map(a => a.id);
+        const others = allSpec.filter(id => id !== step.agentId).slice(0, 2);
+        const cands = [...others, step.agentId];
+        const CHAR_MS = 55;
+        setSimRunning(true);
+        setMessages(m => m.map(msg => msg.followUps ? { ...msg, followUps: null } : msg));
+        const fullText = window.WL_LANG === "ko" ? step.userKo : step.userEn;
+        const msgId = "u" + Date.now();
+        setMessages(m => [...m, { id: msgId, role: "user", text: "", typing: true }]);
+        let charIdx = 0;
+        const iv = setInterval(() => {
+          charIdx++;
+          const done = charIdx >= fullText.length;
+          setMessages(m => m.map(msg => msg.id === msgId ? { ...msg, text: fullText.slice(0, charIdx), typing: !done } : msg));
+          if (done) {
+            clearInterval(iv);
+            setSending(true);
+            setRouting({ candidates: cands, finalAgent: step.agentId });
+            const t = setTimeout(() => {
+              setRouting(null);
+              const html = window.WL_LANG === "ko" ? step.botHtmlKo : step.botHtmlEn;
+              const ac = step.actionCard ? { ...step.actionCard, title: window.WL_LANG === "ko" ? step.actionCard.title : step.actionCard.titleEn } : null;
+              const remaining = sim.steps.slice(stepIndex + 1);
+              const followUps = remaining.length > 0 ? remaining.map((s, idx) => ({ stepIndex: stepIndex + 1 + idx, textKo: s.userKo, textEn: s.userEn })) : null;
+              setMessages(m => [...m, { id: "b" + Date.now(), role: "bot", html, agentId: step.agentId, routedTo: step.agentId, elapsed: step.elapsed, scenario: null, actionCard: ac, followUps }]);
+              setLastTrace({ query: window.WL_LANG === "ko" ? step.userKo : step.userEn, candidates: cands, finalAgent: step.agentId, confidence: 0.96, elapsed: step.elapsed, minutesSaved: step.minutesSaved, tools: step.tools });
+              setSending(false);
+              setSimStep(stepIndex + 1);
+              if (remaining.length > 0) {
+                const autoT = setTimeout(() => playSimStep(sim, stepIndex + 1), sim.steps[stepIndex + 1].delayMs);
+                simTimeoutsRef.current.push(autoT);
+              } else {
+                setSimRunning(false);
+              }
+            }, 600);
+            simTimeoutsRef.current.push(t);
+          }
+        }, CHAR_MS);
+        simTimeoutsRef.current.push(iv);
+      };
+
+      const runSimulation = (sim) => {
+        stopSimulation();
+        setMessages([{ id: "g0", role: "bot", html: window.t("chat_greeting") }]);
+        setTab("chat");
+        setInspectorOpen(false);
+        setSimId(sim.id);
+        setSimStep(0);
+        setTimeout(() => playSimStep(sim, 0), 300);
+      };
+
+      const examples = personaPrompts[tweaks.persona] || personaPrompts.vet;
+      const stats = useM(() => ({ saved: window.SEED_TASKS.reduce((s, t) => s + (t.status === "done" ? t.minutes : 0), 0), requests: window.SEED_TASKS.length, agents: window.AGENTS.filter(a => a.role === "specialist").length }), []);
+
+      return <div className="app">
+        <header className="app-header">
+          <div className="brand">
+            <div className="brand-mark"><svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="2" y="2" width="24" height="24" rx="7" fill="#0d9488" /><path d="M8 14 L12 18 L20 10" stroke="#fff" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" /></svg></div>
+            <div><div className="brand-name">{window.t("brand_name")}</div><div className="brand-sub">{window.t("header_subtitle")}</div></div>
+          </div>
+          <div className="header-stats">
+            <div className="hstat"><b>{stats.saved}</b><span>{window.t("minutes_saved_today")}</span></div>
+            <div className="hstat"><b>{stats.requests}</b><span>{window.t("requests_today")}</span></div>
+            <div className="hstat"><b>{stats.agents}</b><span>{window.t("active_agents")}</span></div>
+          </div>
+          <div className="header-actions">
+            <button className={"btn-ghost" + (demoOpen ? " active" : "")} onClick={() => setDemoOpen(!demoOpen)}>🎬 {window.t("demo_panel")}</button>
+            <button className={"btn-ghost" + (inspectorOpen ? " active" : "")} onClick={() => setInspectorOpen(!inspectorOpen)}>◆ {window.t("nav_inspector")}</button>
+            <button className="lang-toggle" onClick={() => window.WL_setLang(lang === "ko" ? "en" : "ko")}>
+              <span className={lang === "ko" ? "active" : ""}>한</span><span className="divider">|</span><span className={lang === "en" ? "active" : ""}>EN</span>
+            </button>
+          </div>
+        </header>
+
+        <div className="app-body">
+          <nav className="rail">
+            <div className="rail-section">
+              <div className="rail-label">{window.t("persona_label")}</div>
+              <div className="persona-pills">
+                {[{ id: "new", label: window.t("persona_new") }, { id: "vet", label: window.t("persona_vet") }, { id: "mgr", label: window.t("persona_mgr") }].map(p => <button key={p.id} className={"persona-pill" + (tweaks.persona === p.id ? " active" : "")} onClick={() => setTweak("persona", p.id)}>{p.label}</button>)}
+              </div>
+            </div>
+            <div className="rail-section">
+              {[["chat", "💬", "nav_chat"], ["community", "👥", "nav_community"], ["wiki", "📚", "nav_wiki"], ["tasks", "✓", "nav_tasks"]].map(([id, g, k]) => <button key={id} className={"rail-tab" + (tab === id ? " active" : "")} onClick={() => setTab(id)}><span className="rail-glyph">{g}</span><span>{window.t(k)}</span></button>)}
+            </div>
+            <div className="rail-section rail-bottom">
+              <div className="rail-label">{lang === "ko" ? "전문 에이전트" : "Specialists"}</div>
+              <div className="rail-agents">{window.AGENTS.filter(a => a.role === "specialist").slice(0, 8).map(a => <div key={a.id} className="rail-agent" title={window.agentName(a)}><AgentAvatar agent={a} style={tweaks.avatarStyle} size={22} /><span>{window.agentName(a).replace(/ Agent| 에이전트/g, "")}</span></div>)}</div>
+            </div>
+          </nav>
+
+          <main className="workspace">
+            {tab === "chat" && <div className="chat-panel">
+              <div className="chat-scroll" ref={scrollRef}>
+                <div className="chat-inner">
+                  {messages.map(m => <ChatMessage key={m.id} msg={m} avatarStyle={tweaks.avatarStyle} onShowInspector={m.role !== "user" ? () => setInspectorOpen(true) : undefined} onFollowUp={m.followUps && !sending ? (si) => { simTimeoutsRef.current.forEach(clearTimeout); simTimeoutsRef.current = []; const s = (window.DEMO_SIMULATIONS || []).find(x => x.id === simId); if (s) playSimStep(s, si); } : null} />)}
+                  {routing && <RoutingPulse candidates={routing.candidates} finalAgent={routing.finalAgent} avatarStyle={tweaks.avatarStyle} />}
+                  {messages.length <= 1 && <div className="examples"><div className="examples-title">{window.t("examples_title")}</div><div className="examples-grid">{examples.map((q, i) => <button key={i} className="example-chip" onClick={() => send(q)}>{q}</button>)}</div></div>}
+                </div>
+              </div>
+              <div className="chat-input-bar">
+                <div className="chat-input-wrap">
+                  <input className="chat-input" placeholder={window.t("chat_placeholder")} value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => { if (e.key === "Enter") send(); }} />
+                  <button className="btn-primary send-btn" onClick={() => send()} disabled={sending}>{window.t("send")} ↵</button>
+                </div>
+              </div>
+            </div>}
+            {tab === "community" && <CommunityBoard avatarStyle={tweaks.avatarStyle} />}
+            {tab === "wiki" && <WikiPanel />}
+            {tab === "tasks" && <TasksPanel avatarStyle={tweaks.avatarStyle} />}
+          </main>
+
+          <OrchestratorInspector open={inspectorOpen} onClose={() => setInspectorOpen(false)} lastTrace={lastTrace} avatarStyle={tweaks.avatarStyle} />
+          <DemoPanel open={demoOpen} onClose={() => setDemoOpen(false)} onPlay={runSimulation} onStop={stopSimulation} simId={simId} simRunning={simRunning} simStep={simStep} lang={lang} />
+        </div>
+      </div>;
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+  </script>
+</body>
+
+</html>
