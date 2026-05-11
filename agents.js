@@ -85,6 +85,18 @@ window.AGENTS = [
     descEn: "ID issuance, reissue, access rights",
   },
   {
+    id: "parking",
+    nameKo: "주차권 에이전트",
+    nameEn: "Parking Agent",
+    color: "#0284c7",
+    glyph: "🅿️",
+    icon: "car",
+    catKey: "cat_parking",
+    role: "specialist",
+    descKo: "방문객 주차권 등록·결재 상신",
+    descEn: "Visitor parking registration & approval",
+  },
+  {
     id: "hr",
     nameKo: "인사 에이전트",
     nameEn: "HR Agent",
